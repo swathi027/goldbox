@@ -1,0 +1,146 @@
+<section>
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="card">
+                <div class="card-header">
+                  <div class="page-header">
+                    
+                    <div class="page-title">
+                      <h4>All Users</h4>
+                      <h6>Manage your Users</h6>
+                    </div>
+                    <div class="search-set">
+                      <div class="search-input">
+                        <a class="btn btn-searchset"
+                          ><img src="assets/img/icons/search-white.svg" alt="img"
+                        /></a>
+                        <div class="dataTables_filter">
+                          <label>
+                            <input
+                              [(ngModel)]="searchText"
+                              
+                              type="search"
+                              class="form-control"
+                              placeholder="Search..."
+                            />
+                          </label>
+                        </div>
+                      </div>
+                    </div>
+
+                  </div>
+                 <!-- <div class="d-flex">
+                  <div class="page-btn">
+                    <h6  class="btn btn-added"
+                      >Total Users: 1198</h6>
+                  </div>
+                  <div class="page-btn">
+                    <h6  class="btn btn-added"
+                      >Verified Users: 835</h6>
+                  </div>
+                  <div class="page-btn">
+                    <h6  class="btn btn-added"
+                      >Non Verified Users: 338</h6>
+                  </div>
+                  <div class="page-btn">
+                    <h6  class="btn btn-added"
+                      >Terminated Users:2</h6>
+                  </div>
+                 </div> -->
+                  <div class="table-top">
+                  
+                   
+                  </div>
+                
+                <div class="card-body">
+  
+                    <div class="table-responsive">
+                        <table  class="table datanew table-striped">
+                            <thead class="text-center">
+                                <tr>
+                                    <th>S.No</th>
+                                    <th>User Id</th>
+                                    <th>User Name</th>
+                                    <th>Phone</th>
+                                    <th>Email</th>
+                                  
+                                    <th>Reg. Date</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody class="text-center">
+                                <tr *ngFor="let table of tableData.message|searchFilter:searchText| paginate: {itemsPerPage: 10, currentPage: page, totalItems: tableData.total };let i=index">
+                                 <td>{{i+1}}</td>
+                                 <td>{{table.id}}</td>
+                                 <td>{{table.name}}</td>
+                                 <td>{{table.mobile}}</td>
+                                 <td>{{table.email}}</td>
+                                 <td>{{table.created_at | date}}</td>
+                                 <td>
+                                  <button class="info" routerLink="/users/info/{{table.id}}">Info</button>
+                                  <!-- <button class="info" data-bs-toggle="modal" data-bs-target="#exampleModall" (click)="infodata(table.id)">Info</button> -->
+                                  &nbsp;&nbsp;&nbsp;
+                                <span *ngIf="table.status===1">
+                                  <mat-slide-toggle (change)="updatestatus($event.checked, table)" [checked]="true">
+                                    
+                                  </mat-slide-toggle>
+                                </span >
+                                <span *ngIf="table.status===2||table.status===0||table.status===5">
+                                  <mat-slide-toggle (change)="updatestatus($event.checked, table)" [checked]="false">
+                        
+                                  </mat-slide-toggle>
+                                </span>
+                                 
+                                 </td>
+                                </tr>
+                                <tr *ngIf="tableData.length === 0">
+                                    <td colspan="12">
+                                      <h5 class="no-record">No matching records found</h5>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <div class="mt-4 mb-4">
+                          <pagination-controls (pageChange)="pageChanged($event)" (pageBoundsCorrection)="pageChanged($event)" [maxSize]="5"
+                          [directionLinks]='true' [responsive]="true" previousLabel="Prev" nextLabel="Next"
+                          screenReaderPaginationLabel="Pagination" screenReaderPageLabel="page" screenReaderCurrentLabel="You're on page">
+                        </pagination-controls>  
+                      </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+</section>
+
+
+
+
+
+
+
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" data-bs-backdrop="static" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Update user status</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form [formGroup]="form">
+          <label>Reason</label>
+          <input type="text" formControlName="terminate_reason" class="form-control"   [ngClass]="{ 'is-invalid': submitted && f['terminate_reason'].errors }">
+          <div *ngIf="submitted && f['terminate_reason'].errors" class="invalid-feedback">
+            <div *ngIf="f['terminate_reason'].errors['required']">Reason is required</div>
+          </div>
+          <button class="my-3 terminate-btnn" (click)="onSubmit()">Submit</button>
+        </form>
+      </div>
+     
+    </div>
+  </div>
+</div>
+

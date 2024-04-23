@@ -1,0 +1,37 @@
+section{
+    background-image: url('../../../../src/assets/img/newliveback-removebg-preview.png');
+    // background-image: linear-gradient(to right, #f1b835, #e7b53a, #efaf00, #efb812, #f5c113, #f6c31c, #f6c623, #f7c829, #f2c433, #edc03c, #e8bd43, #e3b94a);
+    // height: 321px;
+    background-repeat: round;
+    background-size: auto;
+    // width: 100%;
+    border-radius: 0px;
+    // margin: 10px;
+}
+.row{
+    justify-content: center;
+    align-items: center;
+    padding: 10px;
+}
+.conatiner-fluid{
+    padding: 10px;
+}
+
+.prices-heading{
+    font-size: 13px;
+    font-weight: bolder;
+    margin-bottom: 3px;
+}
+.prices-text{
+    font-size: 17px;
+    font-weight: bolder;
+    margin-bottom: 3px;
+}
+/* Add this to your styles file or in the same HTML file */
+.vertical {
+    border-left: 1px solid #4e4c4c;
+    height: 56px;
+    position: absolute;
+    left: 48%;
+  }
+  

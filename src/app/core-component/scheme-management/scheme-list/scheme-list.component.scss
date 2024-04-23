@@ -1,0 +1,14 @@
+  /* Add this style to your component's CSS file or your global styles */
+  :host ::ng-deep .mat-select-panel {
+    z-index: 1000 !important; /* You can adjust the value based on your needs */
+  }
+
+  :host ::ng-deep .modal-backdrop.show {
+    opacity: 1; /* Initial opacity */
+    transition: opacity 0.3s ease; /* Add a smooth transition effect */
+  
+    /* Set opacity to 0 when the response is received */
+    &[data-response-received='true'] {
+      opacity: 0;
+    }
+  }

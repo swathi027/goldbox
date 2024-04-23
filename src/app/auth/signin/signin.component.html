@@ -1,0 +1,54 @@
+<div class="account-content">
+  <div class="login-wrapper">
+      <div class="login-img">
+        <img src="../../../assets/img/rose.png" alt="img" />
+      </div>
+          <div class="login-content">
+            <div class="login-userset">
+                <div class="login-logo logo-normal">
+                    <img src="assets/img/logo.png" alt="img" />
+                </div>
+                    <a  class="login-logo logo-white"> <img src="" alt="" /><br> </a>
+                <div class="login-userheading">
+                    <h3>Sign In</h3>
+                    <h4>Please login to your account</h4>
+                </div>
+                    <form [formGroup]="form">
+                        <div class="form-login">
+                            <label>Email</label>
+                                <div div class="form-addons">
+                                  <input type="text" placeholder="Enter your email address" formControlName="email" id="email"
+                                      [ngClass]="{'is-invalid': f['email'].touched && f['email'].invalid }" />
+                                          <img src="assets/img/icons/mail.svg" alt="img" />
+                                            <div *ngIf="f['email'].touched && f['email'].invalid" class="invalid-feedback">
+                                            <div *ngIf="f['email'].errors && f['email'].errors['required']">
+                                                Email is required.
+                                            </div>
+                                            </div>
+                                </div>
+                          </div>
+                          <div class="form-login">
+                              <label>Password</label>
+                                <!-- Your component template -->
+                                <div class="form-addons">
+                                  <input [type]="show ? 'text' : 'password'" class="pass-input" placeholder="Enter your password" formControlName="password"  
+                                    id="password" [ngClass]="{ 'is-invalid': f['password'].touched && f['password'].invalid }" />
+                                    <p (click)="togglePasswordVisibility()" *ngIf="!show" class=""><i class="fa-solid fa-eye-slash"></i></p>
+                                    <p (click)="togglePasswordVisibility()" *ngIf="show"><i class="fa-solid fa-eye"></i></p>
+                                  <div *ngIf="f['password'].touched && f['password'].invalid" class="invalid-feedback">
+                                    <div *ngIf="f['password'].errors && f['password'].errors['required']">Password is required.</div>
+                                  </div>
+                                 
+                                </div>
+                        </div>
+                        <div class="form-login">
+                          <button (click)="submit()"  class="btn btn-login" type="submit">
+                              Sign In
+                          </button>
+                        </div>
+                  </form>
+      
+          </div>
+        </div>
+    </div>
+</div>

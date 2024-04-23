@@ -1,0 +1,280 @@
+<section>
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="card">
+                <div class="card-header">
+                    <div class="page-header">
+                        <div class="page-title">
+                            <h4>Ecommerce Orders</h4>
+                            <h6>Manage your Orders</h6>
+                        </div>
+                        <div class="page-btn d-md-flex ">
+                            <button class="btn btn-added1 mr-2">Cancelled orders : {{cancelorders.length}} </button>
+                            <button class="btn btn-added mr-2">Pending orders : {{pendingorders}} </button>
+                            <button class="btn btn-added3">Delivered Orders : {{deliveredorders.length}}</button>
+                        </div>
+                    </div>
+                    <div class="table-top">
+                        <div class="search-set">
+                            <div class="search-path">
+                                <a (click)="showFilter = !showFilter" [class.setclose]="showFilter === true"
+                                    class="btn btn-filter" id="filter_search">
+                                    <img *ngIf="showFilter === false" src="assets/img/icons/filter.svg" alt="img" />
+                                    <span>
+                                        <img *ngIf="showFilter === true" src="assets/img/icons/closes.svg" alt="img" />
+                                    </span>
+                                </a>
+                            </div>
+                            <div class="search-input">
+                                <a class="btn btn-searchset">
+                                    <img src="assets/img/icons/search-white.svg" alt="img" />
+                                </a>
+                                <div class="dataTables_filter">
+                                    <label>
+                                        <input [(ngModel)]="searchText" type="search" class="form-control"
+                                            placeholder="Search..." />
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="page-btn">
+                            <button class="btn btn-added" (click)="exportexcel()">Export to Excel</button>
+                        </div>
+                    </div>
+                    <div class="card mb-0 border-0" *ngIf="showFilter === true">
+                        <div class="card-body pb-0">
+                            <form [formGroup]="filterform" (ngSubmit)="filtertransactions()">
+                                <div class="row">
+                                    <div class="col-lg-3 col-sm-6 col-12">
+                                        <mat-form-field class="w-100">
+                                            <mat-label>Enter a date range</mat-label>
+                                            <mat-date-range-input [rangePicker]="picker">
+                                                <input matStartDate formControlName="start" placeholder="Start date">
+                                                <input matEndDate formControlName="end" placeholder="End date">
+                                            </mat-date-range-input>
+                                            <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+                                            <mat-date-range-picker #picker></mat-date-range-picker>
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="col-lg-3 col-sm-6 col-12">
+                                        <mat-form-field>
+                                            <mat-select [(ngModel)]="selectedValue" formControlName="orderstatus"
+                                                class="no-padding" placeholder="Select Order status">
+                                                <mat-option *ngFor="let data of food"
+                                                    [value]="data.value">{{data.viewValue}}</mat-option>
+                                            </mat-select>
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="col-lg-3 col-sm-6 col-12">
+                                        <mat-form-field class="example-full-width">
+                                            <input matInput type="number" formControlName="mobile"
+                                                placeholder="Mobile number" value="">
+                                        </mat-form-field>
+                                    </div>
+
+                                    <div class="col-lg-2 col-sm-6 col-12 ms-auto d-flex">
+
+                                        <div class="form-group">
+                                            <button type="submit" class="btn btn-filters ms-auto">
+                                                <img src="assets/img/icons/search-whites.svg" alt="img" />
+                                            </button>
+                                        </div>
+                                        <div class="form-group ml-2">
+                                            <button type="reset" (click)="reset()"
+                                                class="btn btn-filters ms-auto bg-gold">
+                                                <i class="feather icon-refresh-ccw " data-bs-toggle="tooltip"
+                                                    title="feather icon-refresh-ccw"></i>
+                                            </button>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
+                    <div class="card-body">
+                        <div class="table-responsive table-striped">
+                            <table class="table datanew" id="datatableexample">
+                                <thead>
+                                    <tr>
+                                        <th>Date</th>
+                                        <th>OrderId</th>
+                                        <th>CustomerName</th>
+                                        <th>CustomerNumber</th>
+                                        <th>Live Price</th>
+                                        <th>GST Price</th>
+                                        <th>VA Price</th>
+                                        <th>Products Price</th>
+                                        <th>Total Amount</th>
+                                        <th>Payment ID</th>
+                                        <th>Payment Mode</th>
+                                        <th>Products</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr
+                                        *ngFor="let table of tableData|searchFilter:searchText| paginate: { itemsPerPage: 10, currentPage: page, totalItems: tableData.total }">
+                                        <td>{{table.created_at | date}}</td>
+                                        <td>{{table.order_id}}</td>
+                                        <td>{{table.username}}</td>
+                                        <td class="text-center">{{table.mobilenumber}}</td>
+                                        <td class="text-center">{{table.live_price|currency}}</td>
+                                        <td class="text-center">{{table.gstAmount|currency}}</td>
+                                        <td class="text-center">{{table.vaAmount|currency}}</td>
+                                        <td class="text-center">{{table.totalproductamount|currency}}</td>
+
+                                        <td class="text-center">{{table.totalprice|currency}}</td>
+                                        <td>{{table.payment_id}}</td>
+                                        <td class="text-center">{{table.payment_mode}}</td>
+                                        <td>
+                                            <button (click)="orderinfo(table.order_id)" data-bs-toggle="modal"
+                                                data-bs-target="#ecominfo" type="button"
+                                                class="btn-sm btn-danger btn-view mr-2 position-relative">
+                                                View
+                                                <span
+                                                    class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                                                    {{table.no_of_products}}
+                                                    <span class="visually-hidden">Unseen Products</span>
+                                                </span>
+                                            </button>
+                                        </td>
+                                        <td>
+                                            <button type="button" class="btn-sm btn-edit mr-2" data-bs-toggle="modal"
+                                                [attr.data-bs-target]="'#ecomstatus' + table.id">
+                                                Status
+                                            </button>
+                                            <div class="modal fade" [id]="'ecomstatus'+table.id"
+                                                data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+                                                aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                                                <div class="modal-dialog">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h1 class="modal-title fs-5" id="staticBackdropLabel">Order
+                                                                status of {{table.username}}</h1>
+                                                            <button type="button" class="btn-close"
+                                                                data-bs-dismiss="modal" aria-label="Close"></button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <div class="table-responsive table-striped" id="table2">
+                                                                <div class="table datanew">
+                                                                    <div>
+                                                                        <div class="d-flex"
+                                                                            *ngFor="let data of table.order_tracking let i=index">
+                                                                            <div>{{i+1}}</div>
+                                                                            <div>{{data.status}}</div>
+                                                                            <div>
+                                                                                <button *ngIf="data.order_status===true"
+                                                                                    type="button"
+                                                                                    class="btn-sm btn-edit mr-2 ">
+                                                                                    <i
+                                                                                        class="fas fa-check pr-2"></i>Updated
+                                                                                </button>
+                                                                                <button
+                                                                                    (click)="updatestatus(table,data,i+1)"
+                                                                                    *ngIf="data.order_status===false"
+                                                                                    type="button"
+                                                                                    class="btn-sm btn-edit mr-2 btn-processes"
+                                                                                    data-bs-dismiss="modal"
+                                                                                    aria-label="Close">
+                                                                                    Update
+                                                                                </button>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                     
+                                    </tr>
+                                    <tr *ngIf="(tableData|searchFilter:searchText).length===0" class="text-center">
+                                        <td colspan="12">
+                                            <h5 class="no-record">No records found</h5>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                            <div class="mt-4 mb-4">
+                                <pagination-controls *ngIf="(tableData|searchFilter:searchText).length!=0"
+                                    (pageChange)="pageChanged($event)" (pageBoundsCorrection)="pageChanged($event)"
+                                    [maxSize]="5" [directionLinks]='true' [responsive]="true" previousLabel="Prev"
+                                    nextLabel="Next" screenReaderPaginationLabel="Pagination"
+                                    screenReaderPageLabel="page" screenReaderCurrentLabel="You're on page">
+                                </pagination-controls>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!--Info-->
+<div class="modal fade" id="ecominfo" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+    aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="staticBackdropLabel">Ordered Products</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" *ngIf="orderedproducts">
+                <div class="table-responsive table-stripe" *ngIf="productslength!=0">
+                    <table class="table datanew">
+                        <thead>
+                            <tr>
+                                <th>S.No</th>
+                                <th>Name</th>
+                                <th>Size</th>
+                                <th>Weight</th>
+                                <th>VA%</th>
+                                <th>Image</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let data of orderedproducts.products;let i=index">
+                                <td>{{i+1}}</td>
+                                <td>{{data.productname}}</td>
+                                <td>{{data.productsize}}</td>
+                                <td>{{data.productweight}}</td>
+                                <td>{{data.productva}}</td>
+                                <td><img width="150px" style="border-radius: 20px;" src="{{data.productimage}}" alt=""></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div *ngIf="productslength===0">
+                    <p>No records found</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<section>
+    <div>
+        <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+            aria-labelledby="staticBackdropLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="staticBackdropLabel">User Transactions</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div>
+                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

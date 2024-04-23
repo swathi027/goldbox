@@ -1,0 +1,222 @@
+<section>
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="card">
+                <div class="card-header">
+                    <div class="page-header">
+                        <div class="page-title">
+                            <h4>Buy Gold Content</h4>
+                            <h6>Manage your Content</h6>
+                        </div>
+                        <div class="page-btn">
+                            <button  class="btn btn-added" data-bs-toggle="modal" data-bs-target="#addcontent">
+                                <img src="assets/img/icons/plus.svg" class="me-2" alt="img"/>Add Content</button>
+                        </div>
+                    </div>
+    
+                    <div class="table-top">
+                        <div class="search-set">
+                        <div class="search-input">
+                            <a class="btn btn-searchset"> <img src="assets/img/icons/search-white.svg" alt="img"/> </a>
+                            <div class="dataTables_filter">
+                            <label>
+                                <input [(ngModel)]="searchText" type="search" class="form-control" placeholder="Search..."/>
+                            </label>
+                            </div>
+                        </div>
+                        </div>
+                    </div>
+    
+                <div class="card-body">
+                    <div class="table-responsive table-striped">
+                        <table  class="table datanew">
+                            <thead>
+                                <tr>
+                                    <th>Wallet Type</th>
+                                    <th>Content</th>
+                                    <th>Explanation</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let table of tableData|searchFilter:searchText| paginate: { itemsPerPage: 10, currentPage: page, totalItems: tableData.total }">
+                                    <td *ngIf="table.wallet_type==='MC'">Main Content</td>
+                                    <td *ngIf="table.wallet_type==='CN'">Sub Content</td>
+                                    <td *ngIf="table.wallet_type==='FE'">Features</td>
+                                    <td *ngIf="table.wallet_type==='TC'">Terms & Conditions</td>
+                                    <td>
+                                        <button type="button" class="btn-sm btn-view" data-bs-toggle="modal" data-bs-target="#staticBackdrop" [attr.data-bs-target]="'#buygold' + table.id">
+                                            View
+                                        </button>
+                                    <!-- View Content -->
+                                            <section>
+                                                <div class="modal fade" [id]="'buygold' + table.id"  data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                                                    <div class="modal-dialog">
+                                                        <div class="modal-content">
+                                                            <div class="modal-header">
+                                                                <h1 class="modal-title fs-5" id="staticBackdropLabel">{{table.wallet_type}}</h1>
+                                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                            </div>
+                                                            <div class="modal-body">
+                                                                <div>
+                                                                    <textarea class="your-textarea-class" readonly style="width: 100%; height: 60vh;">{{table.content}}</textarea>
+                                                                </div>
+                                                            </div>
+                                                            
+                                                            <div class="modal-footer">
+                                                                <button type="button" class="btn-sm btn-primary" data-bs-dismiss="modal">Understood</button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </section>
+                                    </td>
+                                    <td>
+                                        <button type="button" class="btn-sm btn-view" data-bs-toggle="modal" data-bs-target="#staticBackdrop" [attr.data-bs-target]="'#content' + table.id">
+                                            View
+                                        </button>
+                                    <!-- View Explanation -->
+                                        <section>
+                                            <div class="modal fade" [id]="'content' + table.id"  data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                                                <div class="modal-dialog modal-dialog-scrollable">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h1 class="modal-title fs-5" id="staticBackdropLabel">{{table.wallet_type}}</h1>
+                                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <div>
+                                                                <div>
+                                                                    <p>{{table.explanation}}</p>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn-sm btn-primary" data-bs-dismiss="modal">Understood</button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </section>
+                                    </td>
+                                    <td>
+                                        <button type="button" class="btn-sm btn-edit mr-2" (click)="singledata(table.id)" data-bs-toggle="modal" data-bs-target="#editcontent">
+                                            Edit
+                                        </button>
+                                        <mat-slide-toggle [(ngModel)]="table.status" (click)="updatecontentstatus(table)"></mat-slide-toggle>
+                                    </td>
+                                </tr>
+    
+                                <tr *ngIf="tableData.length === 0">
+                                    <td colspan="12">
+                                        <h5 class="no-record">No matching records found</h5>
+                                    </td>
+                                </tr>
+                                <tr *ngIf="(tableData|searchFilter:searchText).length===0" class="text-center">
+                                    <td colspan="12">
+                                        <h5 class="no-record">No records found</h5>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+    
+                        <div class="mt-4 mb-4">
+                            <pagination-controls *ngIf="(tableData|searchFilter:searchText).length!=0" (pageChange)="pageChanged($event)" (pageBoundsCorrection)="pageChanged($event)" [maxSize]="5"
+                                [directionLinks]='true' [responsive]="true" previousLabel="Prev" nextLabel="Next"
+                                screenReaderPaginationLabel="Pagination" screenReaderPageLabel="page" screenReaderCurrentLabel="You're on page">
+                            </pagination-controls>  
+                        </div>
+    
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+</section>
+    
+
+<!--Add Content-->
+<section class="modalbox-section1">
+    <div class="modal fade" id="addcontent" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <form [formGroup]="postdata"  class="p-4" (ngSubmit)="onSubmit()">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="staticBackdropLabel">Add Content</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" (click)="refresh()" aria-label="Close"></button>
+                    </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <div>
+                            <label class="enter-label">Content Type</label>
+                            <select class="form-select mt-2" formControlName="wallet_type">
+                                <option value="" selected>Select Type</option>
+                                <option value="MC">Main Content</option>
+                                <option value="CN">Sub Content</option>
+                                <option value="FE">Features</option>
+                                <option value="TC">Terms & Conditions</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="enter-label mt-4">Content</label>
+                            <textarea class="enter-input" formControlName="content" placeholder="Enter Content"></textarea>
+                        </div>
+                        <div>
+                            <label class="enter-label mt-4">Explanation</label>
+                            <textarea class="enter-input" formControlName="explanation" placeholder="Enter Explanation"></textarea>
+                        </div>
+                        
+                    </div>
+                </div>
+                <div class="modal-footer">
+                        <button type="submit" class="add-btn" >Add</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+</section>
+
+<!--edit Content-->
+<section class="modalbox-section1">
+    <div class="modal fade" id="editcontent" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <form [formGroup]="editform"  class="p-4" (ngSubmit)="editSubmit()">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="staticBackdropLabel">Edit Content</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" (click)="refresh()" aria-label="Close"></button>
+                    </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <div>
+                            <label class="enter-label">Content Type</label>
+                            <select class="form-select mt-2" formControlName="wallet_type">
+                                <option value="" selected>Select Type</option>
+                                <option value="MC" >Main Content</option>
+                                <option value="CN">Sub Content</option>
+                                <option value="FE">Features</option>
+                                <option value="TC">Terms & Conditions</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="enter-label mt-4">Content</label>
+                            <textarea class="enter-input" formControlName="content" placeholder="Enter Content"></textarea>
+                        </div>
+                        <div>
+                            <label class="enter-label mt-4">Explanation</label>
+                            <textarea class="enter-input" formControlName="explanation" placeholder="Enter Explanation"></textarea>
+                        </div>
+                        
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" ata-bs-dismiss="modal"  class="btn btn-primary" >Update</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+</section>

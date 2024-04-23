@@ -1,0 +1,210 @@
+
+<div class="row">
+    <div class="col-sm-12">
+      <div class="card mt-4 mb-4 p-4">
+        <div class="page-header">
+          <div class="page-title">
+            <h4>Subscribed scheme info of {{subscribedata.username}}</h4>
+          </div>
+          <div class="page-btn">
+               
+          </div>
+        </div>
+        <div>
+          <table>
+            <tbody>
+
+                <tr>
+                    <th>Scheme Name</th>
+                    <td> <span class="ml-2 mr-2">:</span> {{subscribedata.schemename}}</td>
+                </tr>
+
+                <tr>
+                    <th>Date</th>
+                    <td> <span class="ml-2 mr-2">:</span> {{subscribedata.charge_date|date}}</td>
+                </tr>
+
+                <tr>
+                    <th>Total MMP`s</th>
+                    <td> <span class="ml-2 mr-2">:</span>{{subscribedata.total_installments}} </td>
+                </tr>
+
+                <tr>
+                    <th>Paid MMP`s</th>
+                    <td> <span class="ml-2 mr-2">:</span>{{subscribedata.paid
+                    }} </td>
+                </tr>
+                <tr>
+                    <th>Total MMP Amount</th>
+                    <td> <span class="ml-2 mr-2">:</span>{{subscribedata.amount|currency}}</td>
+                </tr>
+                <tr>
+                    <th>Paid MMP Amount</th>
+                    <td> <span class="ml-2 mr-2">:</span>{{subscribedata.balance|currency}}</td>
+                </tr>
+                <tr>
+                    <th>Pending MMP Amount</th>
+                    <td> <span class="ml-2 mr-2">:</span>{{((subscribedata.amount/12)*subscribedata.pending)|currency}}</td>
+                </tr>
+
+                <tr>
+                    <th>Processing Fee</th>
+                    <td> <span class="ml-2 mr-2">:</span> {{subscribedata.processing_fee|currency}}</td>
+                </tr>
+                <tr>
+                    <th>EMI Grams</th>
+                    <td> <span class="ml-2 mr-2">:</span> {{subscribedata.emi_grams| number:'1.3-3'}}</td>
+                </tr>
+            </tbody>
+        </table>
+      </div>
+      </div>
+        <div class="card p-4">
+
+              <div class="page-header">
+                <div class="page-title">
+                  <h4>Scheme Installments of {{subscribedata.username}}</h4>
+                  <h6>Manage Your Scheme Installments</h6>
+                </div>
+                <div class="search-set">
+                  <div class="search-path">
+                  </div>
+                  <div class="search-input">
+                    <a class="btn btn-searchset"
+                      ><img src="assets/img/icons/search-white.svg" alt="img"
+                    /></a>
+                    <div class="dataTables_filter">
+                      <label>
+                        <input
+                          [(ngModel)]="searchText"
+                          
+                          type="search"
+                          class="form-control"
+                          placeholder="Search..."
+                        />
+                      </label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+            <div class="card-body">
+
+                <div class="table-responsive">
+                    <table   class="table datanew">
+                        <thead>
+                            <tr>
+                                <th>EMI Date</th>
+                                <th>Payment Status</th>
+                                <th>Amount</th>
+                                <th>Grams</th>
+                                <th>Transaction ID</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let table of tableData|searchFilter:searchText| paginate: { itemsPerPage: 10, currentPage: page, totalItems: tableData.total }">
+                                <td>{{table.emi_date|date}}</td>
+                                <td *ngIf="table.payment_status===0">
+                                    <b class="text-danger">Pending</b>
+                                </td>
+                                <td *ngIf="table.payment_status===1">
+                                    <b class="text-success">Completed</b>
+                                </td>
+                                <td>{{table.amount|currency}}</td>
+                                <td>
+                                    <span *ngIf="table.grams!=0">{{table.grams}}</span>
+                                </td>
+                                <td>
+                                    <span *ngIf="table.transaction_id!=0">{{table.transaction_id}}</span>
+                                </td>
+
+                                <td *ngIf="table.payment_status===0">
+                                    <button type="button" class="btn-md btn-view" (click)="payemi(table)" >
+                                        Pay
+                                    </button>
+                                </td>
+                                <td *ngIf="table.payment_status===1">
+                                    <button type="button" class="btn-success" (click)="transactions(table.transaction_id)" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                                        View more
+                                    </button>
+                                    <button class="btn-sm btn-view ml-2" (click)="reciept(table.transaction_id)"><i class="fas fa-download"></i> Reciept</button>
+                                </td>
+                                      
+                            </tr>
+                              <tr *ngIf="(tableData|searchFilter:searchText).length===0" class="text-center">
+                                <td colspan="12">
+                                  <h5 class="no-record">No records found</h5>
+                                </td>
+                              </tr>
+                        </tbody>
+                    </table>
+                    <div class="mt-4 mb-4" *ngIf="(tableData|searchFilter:searchText).length!=0">
+                      <pagination-controls (pageChange)="pageChanged($event)" (pageBoundsCorrection)="pageChanged($event)" [maxSize]="5"
+                      [directionLinks]='true' [responsive]="true" previousLabel="Prev" nextLabel="Next"
+                      screenReaderPaginationLabel="Pagination" screenReaderPageLabel="page" screenReaderCurrentLabel="You're on page">
+                     </pagination-controls>  
+                  </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+  <!-- Transaction Details -->
+  <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="exampleModalLabel">Transaction Details</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body" >
+          <table *ngIf="transactiondata">
+            <tr>
+                <th class="pt-2 pr-2">Date</th>
+                <td class="pt-2 ">&nbsp; : &nbsp;{{transactiondata.created_at|date}}</td>
+            </tr>
+            <tr>
+                <th class="pt-2 pr-2">Transaction ID</th>
+                <td class="pt-2 ">&nbsp; : &nbsp;{{transactiondata.id}}</td>
+            </tr>
+            <tr>
+                <th class="pt-2 pr-2">Payment Source</th>
+                <td class="pt-2 ">&nbsp; : &nbsp;{{transactiondata.payment_source_type}}</td>
+            </tr>
+            <tr>
+              <th class="pt-2 pr-2">Grams</th>
+              <td class="pt-2 ">&nbsp; : &nbsp;{{transactiondata.grams}}</td>
+          </tr>
+            <tr>
+                <th class="pt-2 pr-2">Gold Price Per Gram</th>
+                <td class="pt-2 ">&nbsp; : &nbsp;{{transactiondata.gold_price_per_gram|currency}}</td>
+            </tr>
+            <tr>
+                <th class="pt-2 pr-2">Giftcard Amount	</th>
+                <td class="pt-2 ">&nbsp; : &nbsp;{{transactiondata.gc_amount|currency}}</td>
+            </tr>
+            <tr>
+                <th class="pt-2 pr-2">Coupon Amount	</th>
+                <td class="pt-2 ">&nbsp; : &nbsp;{{transactiondata.coupon_amount|currency}}</td>
+            </tr>
+            <tr>
+                <th class="pt-2 pr-2">Payble Amount	</th>
+                <td class="pt-2 ">&nbsp; : &nbsp;{{transactiondata.amount_paid|currency}}</td>
+            </tr>
+            <tr>
+                <th class="pt-2 pr-2">Gst	</th>
+                <td class="pt-2 ">&nbsp; : &nbsp;{{transactiondata.gst|currency}}</td>
+            </tr>
+           
+            <tr>
+              <th class="pt-2 pr-2">Final Amount	</th>
+              <td class="pt-2 ">&nbsp; : &nbsp;{{transactiondata.amount|currency}}</td>
+          </tr>
+          </table>
+        </div>
+
+      </div>
+    </div>
+</div>    

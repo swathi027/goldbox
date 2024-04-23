@@ -1,0 +1,260 @@
+<section>
+  <div class="row">
+    <div class="col-sm-12">
+      <div class="card">
+        <div class="card-header">
+          <div class="page-header">
+
+            <div class="page-title">
+              <h4>User Transactions</h4>
+
+              <h6>Manage User Transations</h6>
+
+            </div>
+            <div class="page-btn">
+              <button class="btn btn-added" (click)="exportexcel()">Export to Excel</button>
+            </div>
+          </div>
+          <div class="table-top">
+            <div class="search-set">
+              <div class="search-path" *ngIf="tableData">
+                <a (click)="showFilter = !showFilter" [class.setclose]="showFilter === true" class="btn btn-filter"
+                  id="filter_search">
+                  <img *ngIf="showFilter === false" src="assets/img/icons/filter.svg" alt="img" />
+                  <span>
+                    <img *ngIf="showFilter === true" src="assets/img/icons/closes.svg" alt="img" />
+                  </span>
+                </a>
+              </div>
+              <div class="search-input">
+                <a class="btn btn-searchset">
+                  <img src="assets/img/icons/search-white.svg" alt="img" />
+                </a>
+                <div class="dataTables_filter">
+                  <label>
+                    <input [(ngModel)]="searchText" type="search" class="form-control" placeholder="Search..." />
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- Filter -->
+          <section>
+            <div class="card mb-0 border-0"
+              [ngClass]="{'show-sub-menu': showFilter === true,'hide-sub-menu':showFilter === false}">
+              <div class="card-body pb-0">
+                <form [formGroup]="filterform" (ngSubmit)="filtertransactions()">
+                  <div class="row">
+                    <div class="col-lg-3 col-sm-6 col-12">
+                      <mat-form-field class="w-100">
+                        <mat-label>Enter a date range</mat-label>
+                        <mat-date-range-input [rangePicker]="picker">
+                          <input matStartDate formControlName="start" placeholder="Start date">
+                          <input matEndDate formControlName="end" placeholder="End date">
+                        </mat-date-range-input>
+                        <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+                        <mat-date-range-picker #picker></mat-date-range-picker>
+                      </mat-form-field>
+                    </div>
+                    <div class="col-lg-3 col-sm-6 col-12">
+                      <mat-form-field class="example-full-width">
+                        <input matInput type="number" formControlName="transactionId" placeholder="Transaction ID"
+                          value="">
+                      </mat-form-field>
+                    </div>
+                    <div class="col-lg-3 col-sm-6 col-12">
+                      <mat-form-field class="example-full-width">
+                        <input matInput type="number" formControlName="mobile" placeholder="Mobile number" value="">
+                      </mat-form-field>
+                    </div>
+
+                    <div class="col-lg-2 col-sm-6 col-12 ms-auto d-flex">
+
+                      <div class="form-group">
+                        <button type="submit" class="btn btn-filters ms-auto"><img
+                            src="assets/img/icons/search-whites.svg" alt="img" /></button>
+                      </div>
+                      <div class="form-group ml-2">
+                        <button type="reset" (click)="reset()" class="btn btn-filters ms-auto bg-gold"> <i
+                            class="feather icon-refresh-ccw " data-bs-toggle="tooltip"
+                            title="feather icon-refresh-ccw"></i></button>
+                      </div>
+                    </div>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </section>
+
+          <div class="card-body p-0">
+            <div class="table-responsive">
+              <table class="table datanew table-striped" id="datatableexample">
+                <thead>
+                  <tr>
+                    <th>S.No</th>
+                    <th>Name</th>
+                    <th>Date</th>
+                    <th>Transaction ID</th>
+                    <th>Mobile</th>
+                    <th>Price/Gram</th>
+                    <th>Amount </th>
+                    <th>Gst</th>
+                    <td>Total Amount</td>
+                    <td>Grams</td>
+                    <td>Description</td>
+                    <td>Type</td>
+                    <td>Action</td>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr
+                    *ngFor="let table of tableData|searchFilter:searchText| paginate: {itemsPerPage:tablesize, currentPage: page, totalItems: tableData.total };let i=index">
+                    <td>{{i+1}}</td>
+                    <td>{{userdetails.name}}</td>
+                    <!-- <td>{{table.created_at | date}}</td> -->
+                    <td>{{table.created_at | date}}</td>
+                    <td>{{table.id}}</td>
+                    <td>{{userdetails.mobile}}</td>
+                    <td>{{table.gold_price_per_gram|currency}}</td>
+                    <td>{{table.amount|currency}}</td>
+                    <td>{{table.gst|currency}}</td>
+                    <td *ngIf="table.total_amount">
+                      {{ table.total_amount| currency }}
+                    </td>
+                    <td *ngIf="!table.total_amount">
+                      {{ table.amount| currency }}
+                    </td>
+                    <td>{{table.grams}}</td>
+                    <td>{{table.description}}</td>
+                    <td>{{table.type}}</td>
+                    <td>
+                      <button type="button" class="btn-success" (click)="transactionlogs(table.id)"
+                        data-bs-toggle="modal" data-bs-target="#exampleModal">
+                        View Log
+                      </button>
+                      <button class="btn-sm btn-view ml-2" (click)="reciept(table.id)"><i class="fas fa-download"></i>
+                        Reciept</button>
+                    </td>
+                  </tr>
+
+                  <tr *ngIf="(tableData|searchFilter:searchText).length===0" class="text-center">
+                    <td colspan="12">
+                      <h5 class="no-record">No records found</h5>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+              <div class="mt-4 mb-4 d-md-flex justify-content-between">
+                <pagination-controls (pageChange)="pageChanged($event)" (pageBoundsCorrection)="pageChanged($event)"
+                  [maxSize]="5" [directionLinks]='true' [responsive]="true" previousLabel="Prev" nextLabel="Next"
+                  screenReaderPaginationLabel="Pagination" screenReaderPageLabel="page"
+                  screenReaderCurrentLabel="You're on page">
+                </pagination-controls>
+                <form [formGroup]="form">
+                  <mat-checkbox formControlName="pepperoni">Show All</mat-checkbox>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" data-bs-backdrop="static" tabindex="-1" aria-labelledby="exampleModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Transaction Log</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body" *ngIf="trnlogs">
+        <div class="main-card">
+
+          <div class="row mb-2">
+            <div class="col-4">
+              <p>Transaction Id</p>
+            </div>
+            <div class="col-1">
+              <p>:</p>
+            </div>
+            <div class="col-6">
+              <p class="fw-bold">{{trnlogs[0].transaction_id}}</p>
+            </div>
+          </div>
+          <div class="row mb-2">
+            <div class="col-4">
+              <p>Location</p>
+            </div>
+            <div class="col-1">
+              <p>:</p>
+            </div>
+            <div class="col-6">
+              <p class="fw-bold">{{trnlogs[0].device_location}}</p>
+            </div>
+          </div>
+          <div class="row mb-2">
+            <div class="col-4">
+              <p>IP Address</p>
+            </div>
+            <div class="col-1">
+              <p>:</p>
+            </div>
+            <div class="col-6">
+              <p class="fw-bold">{{trnlogs[0].ip_address}}</p>
+            </div>
+          </div>
+          <div class="row mb-2">
+            <div class="col-4">
+              <p>Device ID</p>
+            </div>
+            <div class="col-1">
+              <p>:</p>
+            </div>
+            <div class="col-6">
+              <p class="fw-bold">{{trnlogs[0].device_id}}</p>
+            </div>
+          </div>
+          <div class="row mb-2">
+            <div class="col-4">
+              <p>Latitude</p>
+            </div>
+            <div class="col-1">
+              <p>:</p>
+            </div>
+            <div class="col-6">
+              <p class="fw-bold">{{trnlogs[0].latitude}}</p>
+            </div>
+          </div>
+          <div class="row mb-2">
+            <div class="col-4">
+              <p>Longitude</p>
+            </div>
+            <div class="col-1">
+              <p>:</p>
+            </div>
+            <div class="col-6">
+              <p class="fw-bold">{{trnlogs[0].longitude}}</p>
+            </div>
+          </div>
+
+          <div class="row mb-2">
+            <div class="col-4">
+              <p>Date</p>
+            </div>
+            <div class="col-1">
+              <p>:</p>
+            </div>
+            <div class="col-6">
+              <p class="fw-bold">{{trnlogs[0].created_at|date}}</p>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

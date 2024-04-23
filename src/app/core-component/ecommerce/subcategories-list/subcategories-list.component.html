@@ -1,0 +1,178 @@
+    <section>
+
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="card">
+                    <div class="card-header">
+        
+                        <div class="page-header">
+                            <div class="page-title">
+                                <h4>SubCategory List</h4>
+                                <h6>Manage your SubCategories</h6>
+                            </div>
+                            <div class="page-btn">
+                                <button  class="btn btn-added" data-bs-toggle="modal" data-bs-target="#addsubcat" ><img src="assets/img/icons/plus.svg" class="me-2" alt="img" />Add SubCategory</button>
+                            </div>
+                    </div>
+        
+                    <div class="table-top">
+                        <div class="search-set">
+                        <div class="search-input">
+                            <a class="btn btn-searchset"> <img src="assets/img/icons/search-white.svg" alt="img"/> </a>
+                            <div class="dataTables_filter">
+                            <label>
+                                <input [(ngModel)]="searchText" type="search" class="form-control" placeholder="Search..."/>
+                            </label>
+                            </div>
+                        </div>
+                        </div>
+                    </div>
+        
+                    <div class="card-body">
+        
+                        <div class="table-responsive table-striped">
+                            <table  class="table datanew">
+                                <thead>
+                                    <tr>
+                                        <th>Category Name</th>
+                                        <th>SubCategory Name</th>
+                                        <th>SubCategory Image</th>
+                                        <th>Type</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+        
+                                <tbody>
+                                    <tr *ngFor="let table of tableData|searchFilter:searchText| paginate: { itemsPerPage: 10, currentPage: page, totalItems: tableData.total }">
+                                        <td>{{table.categoryname}}</td>
+                                        <td>{{table.subcatname}}</td>
+                                        <td><img src="{{table.image_uri}}" class="table-img"></td>
+                                        <td>{{table.type}}</td>
+                                        <td>
+                                            <button type="submit" class="btn-sm btn-edit mr-2" data-bs-toggle="modal" data-bs-target="#editsubcategory"  (click)="singledata(table.id)">
+                                                Edit
+                                            </button>
+                                            <mat-slide-toggle [(ngModel)]="table.status" (click)="updatesubcatstatus(table)" ></mat-slide-toggle>
+                                            &nbsp;<button type="button" class="btn-sm btn-edit bg-danger" (click)="delete(table.id)">
+                                                <i class="fas fa-trash-alt"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+
+                                    <tr *ngIf="(tableData|searchFilter:searchText).length===0" class="text-center">
+                                        <td colspan="12">
+                                            <h5 class="no-record">No records found</h5>
+                                        </td>
+                                    </tr>
+
+                                </tbody>
+                            </table>
+        
+                            <div class="mt-4 mb-4">
+                                <pagination-controls *ngIf="(tableData|searchFilter:searchText).length!=0" (pageChange)="pageChanged($event)" (pageBoundsCorrection)="pageChanged($event)" [maxSize]="5"
+                                    [directionLinks]='true' [responsive]="true" previousLabel="Prev" nextLabel="Next"
+                                    screenReaderPaginationLabel="Pagination" screenReaderPageLabel="page" screenReaderCurrentLabel="You're on page">
+                                </pagination-controls>  
+                            </div>
+        
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+        
+<!--Add Subcategory-->
+    <section class="modalbox-section1">
+        <div class="modal fade" id="addsubcat" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+            <div class="modal-dialog">
+            <form [formGroup]="postdata"  class="p-4" (ngSubmit)="onSubmit()">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="staticBackdropLabel">Add SubCategory</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" (click)="refresh()"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div>
+                                <div>
+                                    <label class="enter-label">Select Category Name</label>
+                                    <select class="enter-input" formControlName="cid" placeholder="Select Category">
+                                        <option value="" selected>Select Category</option>
+                                        <option value="{{data.id}}" *ngFor="let data of categorylists">{{data.catname}}</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="enter-label mt-4">SubCategory Name</label>
+                                    <input class="enter-input" type="text" formControlName="subcatname"  placeholder="Enter SubCategory Name">
+                                </div>
+
+                                <div>
+                                    <label class="enter-label mt-4">Select Type</label>
+                                    <select class="enter-input" formControlName="type" placeholder="Select Type">
+                                        <option value="" selected>Select Type</option>
+                                        <option value="Gold" >Gold</option>
+                                        <option value="Silver">Silver</option>
+                                    </select>
+                                </div>
+                    
+                                <div>
+                                    <label class="upload-label">Upload Image</label>
+                                    <input class="file-input" type="file" formControlName="image_uri"  (change)="onFileChange($event)" accept="image/jpeg, image/png, image/gif" placeholder="No File Chosen">
+                                </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                            <button type="submit" class="add-btn">Add</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+
+<!--Edit Subcategory-->
+<section class="modalbox-section1">
+    <div class="modal fade" id="editsubcategory" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <form [formGroup]="editform" class="p-4" (ngSubmit)="editSubmit()">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="staticBackdropLabel">Update SubCategory</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                            <div>
+                                <label class="enter-label">Select Category Name</label>
+                                <select class="enter-input" formControlName="cid">
+                                    <option value="" selected>Select Category</option>
+                                    <option value="{{data.id}}" *ngFor="let data of categorylists">{{data.catname}}</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="upload-label">SubCategory Name</label>
+                                <input class="file-input" type="text" formControlName="subcatname" placeholder="Enter SubCategory Name">
+                            </div>
+                            <div>
+                                <label class="enter-label mt-4">Select Type</label>
+                                <select class="enter-input" formControlName="type">
+                                    <option value="" selected>Select Type</option>
+                                    <option value="Gold" >Gold</option>
+                                    <option value="Silver">Silver</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="upload-label">Upload Image</label>
+                                <input class="file-input" type="file" formControlName="image"  (change)="onFileChange1($event)"  placeholder="No File Chosen">
+                                <img *ngIf="!imageSrc && editdata" src="{{editdata.image_uri}}" width="70px" class="mt-3" alt="">
+                                <img *ngIf="imageSrc" src="{{imageSrc}}"  class="mt-3" style="width: 70px;">
+                            </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="submit" class="add-btn">Update</button>
+                            </div>
+                </div>
+            </form>
+        </div>
+    </div> 
+</section>

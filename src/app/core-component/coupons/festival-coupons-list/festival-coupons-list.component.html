@@ -1,0 +1,242 @@
+<section>
+  <div class="row">
+    <div class="col-sm-12">
+      <div class="card">
+        <div class="card-header">
+          <div class="page-header">
+            <div class="page-title">
+              <h4>Coupons List</h4>
+              <h6>Manage Your Coupons List</h6>
+            </div>
+            <div class="page-btn">
+              <button class="btn btn-added" data-bs-toggle="modal" data-bs-target="#exampleModal"><img
+                  src="assets/img/icons/plus.svg" class="me-2" alt="img" />Add Coupon</button>
+            </div>
+          </div>
+          <div class="table-top">
+            <div class="search-set">
+              <div class="search-input">
+                <a class="btn btn-searchset">
+                  <img src="assets/img/icons/search-white.svg" alt="img" />
+                </a>
+                <div class="dataTables_filter">
+                  <label>
+                    <input [(ngModel)]="searchText" type="search" class="form-control" placeholder="Search..." />
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="card-body">
+            <div class="table-responsive">
+              <table class="table datanew table-striped">
+                <thead class="text-center">
+                  <tr>
+                    <th>S.No</th>
+                    <th>Amount</th>
+                    <th>Coupon Code</th>
+                    <th>From Date</th>
+                    <th>To/Expire Date</th>
+                    <th>Minumum Transaction Amount</th>
+                    <th>Description</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody class="text-center">
+                  <tr
+                    *ngFor="let table of alldaata.message
+                                |searchFilter:searchText| paginate: {itemsPerPage: 10, currentPage: page, totalItems: alldaata.message.total };let i=index">
+                    <td>{{i+1}}</td>
+                    <td>{{table.amount | currency}}</td>
+                    <td>{{table.coupon}}</td>
+                    <td>{{table.from_date | date :'d/MM/yyyy'}}</td>
+                    <td>{{table.expires_at | date :'d/MM/yyyy'}}</td>
+                    <td>{{table.minimum_transaction_amount | currency}}</td>
+                    <td>
+                      <button class="view-btnn" data-bs-toggle="modal" data-bs-target="#exampleModall"
+                        (click)="viewData(table.id)">View</button>
+                    </td>
+                    <td>{{table.status}}</td>
+                    <td>
+                      <button class="view-btnn" routerLink="/coupons/festival-coupons-list-info/{{table.id}}">Used
+                        Users</button>
+                      &nbsp;&nbsp;<button class="view-btnn" (click)="editData(table)" data-bs-toggle="modal"
+                        data-bs-target="#exampleModalll">Edit</button>&nbsp;&nbsp;
+                      <mat-slide-toggle [(ngModel)]="table.isEnabled"
+                        (click)="updateproductstatus(table)"></mat-slide-toggle>
+                    </td>
+                  </tr>
+                  <tr *ngIf="(alldaata.message|searchFilter:searchText).length===0" class="text-center">
+                    <td colspan="12">
+                      <h5 class="no-record">No records found</h5>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+              <div class="mt-4 mb-4">
+                <pagination-controls (pageChange)="pageChanged($event)"
+                  *ngIf="(alldaata.message|searchFilter:searchText).length!=0"
+                  (pageBoundsCorrection)="pageChanged($event)" [maxSize]="5" [directionLinks]='true' [responsive]="true"
+                  previousLabel="Prev" nextLabel="Next" screenReaderPaginationLabel="Pagination"
+                  screenReaderPageLabel="page" screenReaderCurrentLabel="You're on page">
+                </pagination-controls>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Add coupon -->
+<div *ngIf="couponnnn">
+  <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="exampleModalLabel">Add coupon</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" (click)="close()"></button>
+        </div>
+        <div *ngIf="showContent">
+          <div class="all-users-div mt-3">
+            <div class="text-end">
+              <button class="btn btn-success back" data-bs-toggle="modal" data-bs-target="#exampleModal">BACK</button>
+              <div>
+                <input type="text" class="form-control" placeholder="Enter Amount">
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-body" *ngIf="mydata">
+          <form [formGroup]="form" (ngSubmit)="onSubmit()">
+            <div class="mb-3">
+              <label>Coupon Amount</label>
+              <input type="text"(keydown)="validateNumber($event)" class="form-control" placeholder="Enter Amount" formControlName="amount"
+                [ngClass]="{ 'is-invalid': submitted && f['amount'].errors }">
+              <div *ngIf="submitted && f['amount'].errors" class="invalid-feedback">
+                <div *ngIf="f['amount'].errors['required']">Amount is required</div>
+              </div>
+            </div>
+            <div class="mb-3">
+              <label>From Date</label>
+              <input type="date" class="form-control" formControlName="from_date"
+                [ngClass]="{ 'is-invalid': submitted && f['from_date'].errors }">
+              <div *ngIf="submitted && f['from_date'].errors" class="invalid-feedback">
+                <div *ngIf="f['from_date'].errors['required']">From_date is required</div>
+              </div>
+            </div>
+            <div class="mb-3">
+              <label>To Date</label>
+              <input type="date" class="form-control" formControlName="to_date"
+                [ngClass]="{ 'is-invalid': submitted && f['to_date'].errors }">
+              <div *ngIf="submitted && f['to_date'].errors" class="invalid-feedback">
+                <div *ngIf="f['to_date'].errors['required']">To_date is required</div>
+              </div>
+            </div>
+            <div class="mb-3">
+              <label>Minimum Transaction Amount</label>
+              <input type="text"(keydown)="validateNumber($event)" class="form-control" placeholder="Enter Amount"
+                formControlName="minimum_transaction_amount"
+                [ngClass]="{ 'is-invalid': submitted && f['minimum_transaction_amount'].errors }">
+              <div *ngIf="submitted && f['minimum_transaction_amount'].errors" class="invalid-feedback">
+                <div *ngIf="f['minimum_transaction_amount'].errors['required']">Minimum_transaction_amount is required
+                </div>
+              </div>
+            </div>
+            <div class="mb-3">
+              <label>Description</label>
+              <textarea type="number" class="form-control" placeholder="Enter description here...."
+                formControlName="description"
+                [ngClass]="{ 'is-invalid': submitted && f['description'].errors }"></textarea>
+              <div *ngIf="submitted && f['description'].errors" class="invalid-feedback">
+                <div *ngIf="f['description'].errors['required']">description is required</div>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="submit" class="add-btn">Add</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Coupon Details -->
+<div class="modal fade" id="exampleModall" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Coupon Description</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body" *ngFor="let dataaaa of singledata">
+        <p>{{dataaaa?.description}}</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Edit coupon -->
+<div class="modal fade" id="exampleModalll" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Edit coupon</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" (click)="close()"></button>
+      </div>
+      <div class="modal-body">
+        <form [formGroup]="updateForm" (ngSubmit)="update()">
+          <div class="mb-3">
+            <label>Coupon Amount</label>
+            <input type="text" (keydown)="validateNumber($event)" class="form-control" placeholder="Enter Amount" formControlName="amount"
+              [ngClass]="{ 'is-invalid': submitted2 && f1['amount'].errors }">
+            <div *ngIf="submitted2 && f1['amount'].errors" class="invalid-feedback">
+              <div *ngIf="f1['amount'].errors['required']">Amount is required</div>
+            </div>
+          </div>
+          <div class="mb-3">
+            <label>From Date</label>
+            <input type="date" class="form-control" formControlName="from_date"
+              [ngClass]="{ 'is-invalid': submitted2 && f1['from_date'].errors }">
+            <div *ngIf="submitted2 && f1['from_date'].errors" class="invalid-feedback">
+              <div *ngIf="f1['from_date'].errors['required']">From_date is required</div>
+            </div>
+          </div>
+          <div class="mb-3">
+            <label>To Date</label>
+            <input type="date" class="form-control" formControlName="to_date"
+              [ngClass]="{ 'is-invalid': submitted2 && f1['to_date'].errors }">
+            <div *ngIf="submitted2 && f1['to_date'].errors" class="invalid-feedback">
+              <div *ngIf="f1['to_date'].errors['required']">To_date is required</div>
+            </div>
+          </div>
+          <div class="mb-3">
+            <label>Minimum Transaction Amount</label>
+            <input type="number" (keydown)="validateNumber($event)" class="form-control" placeholder="Enter Amount"
+              formControlName="minimum_transaction_amount"
+              [ngClass]="{ 'is-invalid': submitted2 && f1['minimum_transaction_amount'].errors }">
+            <div *ngIf="submitted2 && f1['minimum_transaction_amount'].errors" class="invalid-feedback">
+              <div *ngIf="f1['minimum_transaction_amount'].errors['required']">Minimum_transaction_amount is required
+              </div>
+            </div>
+          </div>
+          <div class="mb-3">
+            <label>Description</label>
+            <textarea type="number" class="form-control" placeholder="Enter description here...."
+              formControlName="description"
+              [ngClass]="{ 'is-invalid': submitted2 && f1['description'].errors }"></textarea>
+            <div *ngIf="submitted2 && f1['description'].errors" class="invalid-feedback">
+              <div *ngIf="f1['description'].errors['required']">description is required</div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="submit" class="add-btn">Update</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

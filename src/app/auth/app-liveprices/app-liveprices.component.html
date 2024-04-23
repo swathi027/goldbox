@@ -1,0 +1,18 @@
+<!-- live-prices.component.html -->
+
+<section>
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col">
+          <p class="prices-heading">24K Gold 999 Purity</p>
+          <p class="prices-text" [ngStyle]="{'color': livesellprice24color}">{{livesellprice24 | currency}}/gm</p>
+        </div>
+        <div class = "vertical"></div>
+        <div class="col">
+          <p class="prices-heading">22K Gold 999 Purity</p>
+          <p class="prices-text" [ngStyle]="{'color': livesellprice22color}">{{livesellprice22 | currency}}/gm</p>
+        </div>
+      </div>
+    </div>
+  </section>
+  

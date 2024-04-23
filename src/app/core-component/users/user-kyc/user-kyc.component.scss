@@ -1,0 +1,29 @@
+.pan-img{
+    width: 100%;
+    height: 80px;
+    object-fit: cover;
+}
+.view-button{
+    background: #d5a631;
+    border: navajowhite;
+    color: white;
+    border: navajowhite;
+    border-radius: 3px;
+    padding: 1px 8px;
+
+}
+.view-button:hover{
+    background-color: #630914;
+}
+.verify{
+    color: green;
+    font-size: 16px;
+    font-weight: bold;
+  
+}
+.verifynot{
+    color: red;
+    font-size: 16px;
+    font-weight: bold;
+   
+}

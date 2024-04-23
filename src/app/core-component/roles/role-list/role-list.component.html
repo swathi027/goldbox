@@ -1,0 +1,132 @@
+<section>
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="card">
+                <div class="card-header">
+                    <div class="page-header">
+                        <div class="page-title">
+                            <h4>Roles List</h4>
+                            <h6>Manage your roles</h6>
+                        </div>
+                        <div class="page-btn">
+                            <button (click)="refresh()" class="btn btn-added" data-bs-toggle="modal" data-bs-target="#addcategory">
+                                <img src="assets/img/icons/plus.svg" class="me-2" alt="img" />Add Role</button>
+                        </div>
+                </div>
+    
+                    <div class="table-top">
+                        <div class="search-set">
+                        <div class="search-input">
+                            <a class="btn btn-searchset"> <img src="assets/img/icons/search-white.svg" alt="img"/> </a>
+                            <div class="dataTables_filter">
+                            <label>
+                                <input [(ngModel)]="searchText" type="search" class="form-control" placeholder="Search..."/>
+                            </label>
+                            </div>
+                        </div>
+                        </div>
+                    </div>
+    
+                <div class="card-body">
+    
+                    <div class="table-responsive table-striped">
+                        <table  class="table datanew">
+                            <thead>
+                                <tr>
+                                    <th>Role ID</th>
+                                    <th>Role Title</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let table of tableData|searchFilter:searchText| paginate: { itemsPerPage: 10, currentPage: page, totalItems: tableData.total }">
+                                    <td>{{table.id}}</td>
+                                    <td>{{table.title}}</td>
+                                    <td>
+                                        <button type="button" class="btn-sm btn-edit mr-2" data-bs-toggle="modal" data-bs-target="#editcategory" (click)="singledata(table.id)">
+                                            Edit
+                                        </button>
+    
+                                        <button type="button" class="mr-2 btn-danger" (click)="updatecategorystatus(table)"><i _ngcontent-dmq-c275="" class="fas fa-trash-alt" aria-hidden="true"></i></button>
+                                       
+                                    </td>
+                                </tr>
+    
+                                <tr *ngIf="(tableData|searchFilter:searchText).length===0" class="text-center">
+                                    <td colspan="12">
+                                        <h5 class="no-record">No records found</h5>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+    
+                        <div class="mt-4 mb-4">
+                            <pagination-controls *ngIf="(tableData|searchFilter:searchText).length!=0" (pageChange)="pageChanged($event)" (pageBoundsCorrection)="pageChanged($event)" [maxSize]="5"
+                                [directionLinks]='true' [responsive]="true" previousLabel="Prev" nextLabel="Next"
+                                screenReaderPaginationLabel="Pagination" screenReaderPageLabel="page" screenReaderCurrentLabel="You're on page">
+                            </pagination-controls>  
+                        </div>
+    
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+    </section>
+    
+    <!--Add category-->
+    <section class="modalbox-section1">
+        <div class="modal fade" id="addcategory" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+            <div class="modal-dialog">
+            <form [formGroup]="postdata"  class="p-4" (ngSubmit)="onSubmit()">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="staticBackdropLabel">Add Role</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" (click)="refresh()"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div>
+                            <div>
+                                <label class="enter-label mb-2">Role Title</label>
+                                <input class="enter-input" type="text" formControlName="title"  placeholder="Enter role title">
+                            </div>
+                           
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="add-btn">Add</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    </section>
+    
+    
+    
+    <!-- Edit Category-->
+    <section class="modalbox-section1">
+    <div class="modal fade" id="editcategory" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog">
+        <form [formGroup]="editform"  class="p-4" (ngSubmit)="editSubmit()">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="staticBackdropLabel">Update Role</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div>
+                        <label class="enter-label">Role Tilte</label>
+                        <input class="enter-input" type="text" formControlName="title" placeholder="Enter role title">
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Update</button>
+                </div>
+            </div>
+        </form>
+        </div>
+    </div>
+    </section>

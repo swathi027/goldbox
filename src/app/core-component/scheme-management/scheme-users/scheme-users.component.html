@@ -1,0 +1,101 @@
+
+<div class="row">
+    <div class="col-sm-12">
+        <div class="card">
+            <div class="card-header">
+              <div class="page-header">
+                <div class="page-title">
+                  <h4>Scheme Users</h4>
+                  <h6>Manage your Scheme Users</h6>
+                </div>
+                <div class="page-btn">
+                  <h6  class="btn btn-added"
+                    ><span class="me-2">Scheme Users :</span>{{tableData.length}}</h6
+                  >
+                </div>
+              </div>
+              <div class="table-top">
+                <div class="search-set">
+                  <div class="search-input">
+                    <a class="btn btn-searchset"
+                      ><img src="assets/img/icons/search-white.svg" alt="img"
+                    /></a>
+                    <div class="dataTables_filter">
+                      <label>
+                        <input
+                          [(ngModel)]="searchText"
+                          
+                          type="search"
+                          class="form-control"
+                          placeholder="Search..."
+                        />
+                      </label>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="wordset">
+                 
+                </div>
+
+              </div>
+
+            <div class="card-body">
+
+                <div class="table-responsive">
+                    <table  class="table datanew">
+                        <thead>
+                            <tr>
+                                <th >User Name</th>
+                                <th >Scheme Name</th>
+                                <th >Total Installments</th>
+                                <th >Processing Fee</th>
+                                <th >Total Amount</th>
+                                <th >Status</th>
+                                <th >Subscribe Date</th>
+                                <th >Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let table of tableData|searchFilter:searchText| paginate: { itemsPerPage: 10, currentPage: page, totalItems: tableData.total }">
+                                <td>{{table.username}}</td>
+                                <td>{{table.schemename}}</td>
+                                <td>{{table.total_installments}}</td>
+                                <td>{{table.processing_fee|currency}}</td>
+                                <td>{{table.amount|currency}}</td>
+                                <td *ngIf="table.scheme_status===0">
+                                  <b class="text-danger">Pending</b>
+                                </td>
+                                <td *ngIf="table.scheme_status===1">
+                                  <b class="text-success">Completed</b>
+                                </td>
+                                <td>{{table.created_at|date}}</td>
+                                <td>
+                                  <button type="button" class="btn-sm btn-view" routerLink="/schemes/users-info/{{table.id}}">
+                                    Info
+                                    </button>
+                                </td>                              
+                            </tr>
+                            <!-- <tr *ngIf="tableData.length === 0">
+                                <td colspan="12">
+                                  <h5 class="no-record">No matching records found</h5>
+                                </td>
+                              </tr> -->
+                              <tr *ngIf="(tableData|searchFilter:searchText).length===0" class="text-center">
+                                <td colspan="12">
+                                  <h5 class="no-record">No records found</h5>
+                                </td>
+                              </tr>
+                        </tbody>
+                    </table>
+                    <div class="mt-4 mb-4" *ngIf="(tableData|searchFilter:searchText).length!=0">
+                      <pagination-controls (pageChange)="pageChanged($event)" (pageBoundsCorrection)="pageChanged($event)" [maxSize]="5"
+                      [directionLinks]='true' [responsive]="true" previousLabel="Prev" nextLabel="Next"
+                      screenReaderPaginationLabel="Pagination" screenReaderPageLabel="page" screenReaderCurrentLabel="You're on page">
+                     </pagination-controls>  
+                  </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

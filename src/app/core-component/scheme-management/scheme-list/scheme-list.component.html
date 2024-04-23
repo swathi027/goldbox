@@ -1,0 +1,339 @@
+
+  <div class="row">
+      <div class="col-sm-12">
+          <div class="card">
+              <div class="card-header">
+                <div class="page-header">
+                  
+                  <div class="page-title">
+                    <h4>Schemes List</h4>
+                    <h6>Manage your Schemes</h6>
+                  </div>
+                  <div class="page-btn">
+                    <h6  class="btn btn-added" data-bs-toggle="modal" data-bs-target="#addscheme"
+                      ><img src="assets/img/icons/plus.svg" class="me-2" alt="img" />Add
+                      Scheme</h6>
+                  </div>
+                </div>
+                <div class="table-top">
+                  <div class="search-set">
+                    <div class="search-input">
+                      <a class="btn btn-searchset"
+                        ><img src="assets/img/icons/search-white.svg" alt="img"
+                      /></a>
+                      <div class="dataTables_filter">
+                        <label>
+                          <input
+                            [(ngModel)]="searchText"
+                            
+                            type="search"
+                            class="form-control"
+                            placeholder="Search..."
+                          />
+                        </label>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              <div class="card-body">
+
+                  <div class="table-responsive">
+                      <table  class="table datanew table-striped">
+                          <thead>
+                              <tr>
+                                  <th>Title</th>
+                                  <!-- <th>Country</th> -->
+                                  <th>Type</th>
+                                  <th>Description</th>
+                                  <th>Tenure List</th>
+                                  <th>Amount List</th>
+                                  <th>Action</th>
+                              </tr>
+                          </thead>
+                          <tbody>
+                              <tr *ngFor="let table of tableData|searchFilter:searchText| paginate: {itemsPerPage: 10, currentPage: page, totalItems: tableData.total }">
+                                  <td>{{table.title}}</td>
+                                  <!-- <td>{{table.country}}</td> -->
+                                  <td *ngIf="table.scheme_calculation_type==='MG'">MY GOLD</td>
+                                  <td *ngIf="table.scheme_calculation_type==='JW'">JEWLLERY PLAN</td>
+                                  <td>
+                                  <button type="button" class="btn-sm btn-view" data-bs-toggle="modal" [attr.data-bs-target]="'#sscheme' + table.id">
+                                    View
+                                    </button>
+                              <!-- View Modal -->
+                                  <div class="modal fade" [id]="'sscheme'+table.id" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                                    <div class="modal-dialog">
+                                      <div class="modal-content">
+                                        <div class="modal-header">
+                                          <h1 class="modal-title fs-5" id="staticBackdropLabel">{{table.title}}</h1>
+                                          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                          <p>
+                                            {{table.description}}
+                                          </p>
+                                        </div>
+                                        <div class="modal-footer">
+                                          <button type="button" class="btn-sm btn-primary" data-bs-dismiss="modal">Understood</button>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                  </td>
+                                  <td>
+                                    <button type="button" class="btn-sm btn-view" data-bs-toggle="modal" data-bs-target="#tenure" (click)="tenurelist(table.id)">
+                                      Info
+                                      </button>
+                                  </td>
+                                  <td>
+                                    <button type="button" class="btn-sm btn-view" data-bs-toggle="modal"data-bs-toggle="modal" data-bs-target="#amount" (click)="amountlist(table.id)">
+                                      Info
+                                      </button>
+                                  </td>
+                                  <td>
+                                    <button type="button" class="btn-sm btn-danger btn-view mr-2" routerLink="/schemes/info/{{table.id}}">
+                                      Info
+                                      </button>
+                                    <button type="button" class="btn-sm btn-edit mr-2" data-bs-toggle="modal" data-bs-target="#editscheme" (click)="singledata(table.id)">
+                                      Edit
+                                      </button>
+                                    <mat-slide-toggle [(ngModel)]="table.gc_scheme" (click)="updatestatus(table)"></mat-slide-toggle>
+                                  </td>
+                              </tr>
+                              <tr *ngIf="tableData.length === 0">
+                                  <td colspan="12">
+                                    <h5 class="no-record">No matching records found</h5>  
+                                  </td>
+                              </tr>
+                          </tbody>
+                      </table>
+                      <div class="mt-4 mb-4">
+                        <pagination-controls (pageChange)="pageChanged($event)" (pageBoundsCorrection)="pageChanged($event)" [maxSize]="5"
+                        [directionLinks]='true' [responsive]="true" previousLabel="Prev" nextLabel="Next"
+                        screenReaderPaginationLabel="Pagination" screenReaderPageLabel="page" screenReaderCurrentLabel="You're on page">
+                      </pagination-controls>  
+                    </div>
+                  </div>
+              </div>
+          </div>
+      </div>
+  </div>
+
+  <!-- add Scheme -->
+<div class="modal" id="addscheme" data-bs-backdrop="static" data-bs-keyboard="false" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <form [formGroup]="postdata"  class="p-4" (ngSubmit)="onSubmit()">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="staticBackdropLabel">Add Scheme</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" (click)="refresh()"></button>
+      </div>
+      <div class="modal-body">           
+          <div class="card-body"> 
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="form-group">
+                      <label>Scheme Name</label>
+                      <input type="text" formControlName="title" placeholder="Enter Scheme Name">
+                  </div>
+                </div>
+                  <div class="col-md-6">
+                    <label> Country</label>
+                  <select class="form-select mt-2" formControlName="country">
+                    <option value="" selected>Select Country</option>
+                    <option value="{{data.nicename}}" *ngFor="let data of countries">{{data.nicename}}</option>
+                  </select>
+                  </div>     
+                  <div class="col-md-6">
+                    <label> Calculation Type</label>
+                  <select class="form-select mt-2" formControlName="scheme_calculation_type">
+                    <option value="" selected>Select Type</option>
+                    <option value="MG" >MY GOLD</option>
+                    <option value="JW">JEWLLERY PLAN</option>
+                  </select>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="form-group">
+                        <label>Description</label>
+                        <input type="text" formControlName="description" placeholder="Enter Description">
+                    </div>
+                  </div>     
+              </div>
+              <div class="mt-2 mb-2">
+              <button type="submit" ata-bs-dismiss="modal"  class="btn btn-primary">Add</button>
+              </div>
+          </div>
+      
+      </div>
+
+    </div>
+  </form>
+  </div>
+</div>
+
+<!-- edit scheme -->
+<div class="modal fade" id="editscheme" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <form [formGroup]="editform"  class="p-4" (ngSubmit)="editSubmit()">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="staticBackdropLabel">Edit Scheme</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">           
+          <div class="card-body">
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="form-group">
+                      <label>Scheme Name</label>
+                      <input type="text"  formControlName="title" placeholder="Enter Scheme Name">
+                      <input type="text"  formControlName="gc_scheme" hidden class="">
+
+                  </div>
+                </div>
+                  <div class="col-md-6">
+                    <label> Country</label>
+                  <select class="form-select mt-2"  formControlName="country">
+                    <option value="" >Select Country</option>
+                    <option value="{{data.nicename}}" *ngFor="let data of countries">{{data.nicename}}</option>
+                  </select>
+                  </div>     
+                  <div class="col-md-6">
+                    <label> Calculation Type</label>
+                  <select class="form-select mt-2" formControlName="scheme_calculation_type">
+                    <option value="" selected>Select Type</option>
+                    <option value="MG" >MY GOLD</option>
+                    <option value="JW">JEWLLERY PLAN</option>
+                  </select>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="form-group">
+                        <label>Description</label>
+                        <input type="text" formControlName="description" placeholder="Enter Description">
+                    </div>
+                  </div>     
+              </div>
+              <div class="mt-2 mb-2">
+              <button type="submit" ata-bs-dismiss="modal"  class="btn btn-primary" data-bs-dismiss="modal" aria-label="Close">Update</button>
+              </div>
+          </div>
+      
+      </div>
+
+    </div>
+  </form>
+  </div>
+</div>
+
+  <!-- Add tenure -->
+  <div class="modal" id="tenure" data-bs-backdrop="static" data-bs-keyboard="false" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="staticBackdropLabel">Manage Tenures</h1>
+
+          
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" (click)="refresh()"></button>
+        </div>
+        <div class="modal-body">           
+            <div class="card-body"> 
+              <div > 
+                <form [formGroup]="tenureform"  class="" (ngSubmit)="addtenure()">
+                <div class="row">
+                  <div class="col-10">
+                    <div class="form-group">
+                        <input type="number" formControlName="tenure" placeholder="Enter tenure in months">
+                    </div>
+                  </div>
+                  <div class="col-2">
+                    <button type="submit" ata-bs-dismiss="modal"  class="btn btn-primary">Add</button>
+                  </div>
+                </div>
+              </form>
+                </div>
+                
+            </div>
+              <div class="table" *ngIf="tenurelenght!=0">
+                <table  class="table datanew table-striped">
+                    <thead>
+                        <tr>
+                            <th>Tenure in Months</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let table of tenures">
+                            <td>{{table.tenure}}</td>
+
+                            <td>
+                              <button type="button" class="btn-sm btn-edit bg-danger mr-2"(click)="deletetenure(table)">
+                                <i class="fas fa-trash-alt"></i>
+                                </button>
+                              <mat-slide-toggle [(ngModel)]="table.status" (click)="updatetenurestatus(table)"></mat-slide-toggle>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+            </div>
+            </div>
+        </div>
+      </div>
+    </div>
+
+
+      <!-- Add Amount -->
+  <div class="modal" id="amount" data-bs-backdrop="static" data-bs-keyboard="false" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="staticBackdropLabel">Manage Tenure Amount</h1>
+
+          
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" (click)="refresh()"></button>
+        </div>
+        <div class="modal-body">           
+            <div class="card-body"> 
+              <div > 
+                <form [formGroup]="amountform"  class="" (ngSubmit)="addamount()">
+                <div class="row">
+                  <div class="col-10">
+                    <div class="form-group">
+                        <input type="number" formControlName="amount" placeholder="Enter Amount">
+                    </div>
+                  </div>
+                  <div class="col-2">
+                    <button type="submit" ata-bs-dismiss="modal"  class="btn btn-primary">Add</button>
+                  </div>
+                </div>
+              </form>
+                </div>
+                
+            </div>
+              <div class="table" *ngIf="amountlenght!=0">
+                <table  class="table datanew table-striped">
+                    <thead>
+                        <tr>
+                            <th>Tenure in Amount</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let table of amountres">
+                            <td>{{table.amount}}</td>
+
+                            <td>
+                              <button type="button" class="btn-sm btn-edit bg-danger mr-2"(click)="deleteamount(table)">
+                                <i class="fas fa-trash-alt"></i>
+                                </button>
+                              <mat-slide-toggle [(ngModel)]="table.status" (click)="updateamountstatus(table)"></mat-slide-toggle>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+            </div>
+            </div>
+        </div>
+      </div>
+    </div>

@@ -1,0 +1,274 @@
+<section>
+    <div class="conatainer card p-2">
+        <div class="row ">
+            <div class="col-md-12">
+                <div class="page-header">
+                    <div class="page-title">
+                      <h4>Event Details :</h4>
+                    </div>
+                  </div>
+            </div>
+            <div class="col-md-6">
+                <table>
+                    <tr>
+                        <th>User Name
+                        </th>
+                        <td>
+                          : {{info.username}}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Event Type
+                        </th>
+                        <td>
+                          : {{info.event_type}}
+                        </td>
+                    </tr>
+                    <tr *ngIf="info.event_type != 'MRG'">
+                        <th>Event Holder Name
+                        </th>
+                        <td>
+                          : {{info.holder_name}}
+
+                        </td>
+                    </tr>
+                    <tr *ngIf="info.event_type != 'MRG'">
+                        <th>Other Event Type
+                        </th>
+                        <td>
+                          : {{info.other_event_type}}
+
+                        </td>
+                    </tr>
+                    <tr *ngIf="info.event_type == 'MRG'">
+                        <th> Bride Name
+                        </th>
+                        <td>
+                          : {{info.bride_name}}
+
+                        </td>
+                    </tr>
+                    <tr *ngIf="info.event_type == 'MRG'">
+                        <th> Groom Name
+                        </th>
+                        <td>
+                          : {{info.groom_name}}
+
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Event ID
+                        </th>
+                        <td>
+                          : {{info.id}}
+
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Event Name
+                        </th>
+                        <td>
+                          : {{extractEventName(info.event_name)}}
+
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Event Date
+                        </th>
+                        <td>
+                          : {{info.event_date}}
+
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Event Time
+                        </th>
+                        <td>
+                          : {{info.muhurtham_time}}
+
+                        </td>
+                    </tr>
+                </table>
+
+            </div>
+            <div class="col-md-6">
+                <table>
+                    <tr>
+                        <th>Venue
+                        </th>
+                        <td>
+                          : {{info.venue}}
+
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Description
+                        </th>
+                        <td>
+                          : {{info.description}}
+
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Status
+                        </th>
+                        <td>
+                          : 
+                          <b *ngIf="info.status===0">Event Initiated</b>
+                          <b *ngIf="info.status===1">Event Approved </b>
+                          <b *ngIf="info.status===2">Event Not Approved</b>
+                          <b *ngIf="info.status===3">Event Cancelled </b>
+                          <b *ngIf="info.status===4">Event Completed </b>
+                          <b *ngIf="info.status===5">Event Deleted </b>
+
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Created On	
+                        </th>
+                        <td>
+                          : {{info.created_at|date}}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Updated On
+                        </th>
+                        <td>
+                          : {{info.updated_at|date}}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Recieved Grams
+                        </th>
+                        <td>
+                          : {{golds.totalGiftedGrams}}
+                        </td>
+                    </tr>
+
+                </table>
+
+            </div>
+
+        </div>
+    </div>
+    <div class="container">
+        <div class="row" *ngIf="info.event_type != 'MRG'">
+            <div class="col-md-6">
+              <div class="card">
+                <div class="card-body">
+                  <b>Photo : </b> <br>
+                  <div class="text-center">
+                    <img src="{{info.photo}}" class="oth image" alt="Image not available">
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6">
+          
+            </div>
+          </div>
+          <div class="row" *ngIf="info.event_type == 'MRG'">
+            <div class="col-md-6">
+              <div class="card">
+                <div class="card-body">
+                  <b>Couple photo : </b> <br>
+                  <div class="text-center">
+                    <img src="{{info.photo}}" class="mrg image" alt="Image not available">
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="card">
+                <div class="card-body">
+                  <b>Wedding card photo : </b> <br>
+                  <div class="text-center">
+                    <img src="{{info.wedding_card_photo}}" class="mrg image" alt="Image not available">
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+    </div>
+</section>
+
+<section>
+  
+  <div class="row">
+      <div class="col-sm-12">
+          <div class="card">
+              <div class="card-header">
+                <div class="page-header">
+                  
+                  <div class="page-title">
+                    <h4>Event Transactions</h4>
+                     <h6>Manage event transactions</h6>
+                  </div>
+                  <div class="search-set">
+                    <div class="search-input">
+                      <a class="btn btn-searchset"
+                        ><img src="assets/img/icons/search-white.svg" alt="img"
+                      /></a>
+                      <div class="dataTables_filter">
+                        <label>
+                          <input
+                            [(ngModel)]="searchText"
+                            
+                            type="search"
+                            class="form-control"
+                            placeholder="Search..."
+                          />
+                        </label>
+                      </div>
+                    </div>
+                  </div>
+                 
+                </div>
+
+              <div class="card-body">
+
+                  <div class="table-responsive">
+                      <table  class="table datanew table-striped">
+                          <thead>
+                              <tr>
+                                  <th>Date</th>
+                                  <th>Name</th>
+                                  <th>Phone</th>
+                                  <th>Transaction ID</th>
+                                  <th>Amount</th>
+                                  <th>Live rate/gram</th>
+                                  <th>Gifted grams</th>
+                                  <th>Payment Source</th>
+                              </tr>
+                          </thead>
+                          <tbody>
+                              <tr *ngFor="let table of golds.transactions|searchFilter:searchText| paginate: {itemsPerPage: 10, currentPage: page, totalItems: golds.total };let i=index">
+                                <td>{{table.created_at | date :'d/MM/yyyy'}}</td>
+                                <td>{{table.user_name}}</td>
+                                <td>{{table.user_mobile}}</td>
+                                <td>{{table.id}}</td>
+                                <td>{{table.amount|currency}}</td>
+                                <td>{{table.gold_price_per_gram|currency}}</td>
+                                <td>{{table.grams}}</td>
+                                <td>{{table.payment_source_type}}</td>
+                              </tr>
+                              <tr *ngIf="golds.length === 0">
+                                  <td colspan="12">
+                                    <h5 class="no-record">No matching records found</h5>
+                                  </td>
+                              </tr>
+                          </tbody>
+                      </table>
+                      <div class="mt-4 mb-4">
+                        <pagination-controls (pageChange)="pageChanged($event)" (pageBoundsCorrection)="pageChanged($event)" [maxSize]="5"
+                        [directionLinks]='true' [responsive]="true" previousLabel="Prev" nextLabel="Next"
+                        screenReaderPaginationLabel="Pagination" screenReaderPageLabel="page" screenReaderCurrentLabel="You're on page">
+                      </pagination-controls>  
+                    </div>
+                  </div>
+              </div>
+          </div>
+      </div>
+  </div>
+  </div>
+</section>

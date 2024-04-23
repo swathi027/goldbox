@@ -1,0 +1,333 @@
+<section>
+<div class="container">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="card">
+                <div class="card-header">
+                    <div class="page-header">
+                        <div class="page-title">
+                            <h4>Scheme Info</h4>
+                            <h6>Manage your Scheme Content</h6>
+                        </div>
+                        <div class="page-btn">
+                        </div>
+                </div>
+                <div class="card-body">
+                <div class="row">
+                    <!-- Scheme Content -->
+                    <div class="col-md-12">
+                    <div class="card p-2">
+                        <div class="page-title">
+                            <h4 class="mt-2 mb-4"><b>Scheme Content</b></h4>
+                        </div>
+                        <form [formGroup]="contentform" (ngSubmit)="updatecontent()">
+                            <div class="NgxEditor__Wrapper">
+                              <textarea formControlName="content" [ngModel]="content" style="width: 100%;" rows="10"></textarea>
+                              <!-- <ngx-editor-menu [editor]="schemeContentEditor"></ngx-editor-menu>
+                              <ngx-editor [editor]="schemeContentEditor" formControlName="content" [ngModel]="content" [disabled]="false" [placeholder]="'Type here...'"></ngx-editor> -->
+                            </div>
+                          
+                            <div class="mt-2 mb-2 d-flex justify-content-end">
+                              <button class="btn-subm" type="submit" *ngIf="content">Update</button>
+                              <button class="btn-subm" type="submit"  *ngIf="!content">Add</button>
+                            </div>
+                          </form>
+                    </div>
+                    </div>
+                    <!-- Scheme Terms & Conditions -->
+                    <div class="col-md-12">
+                    <div class="card p-2">
+                        <div class="page-title">
+                            <h4 class="mt-2 mb-4"><b>Scheme Terms & Conditions</b></h4>
+                        </div>
+                        <form [formGroup]="tcform" (ngSubmit)="updatetc()">
+                        <div class="NgxEditor__Wrapper">
+                          <textarea formControlName="tc" [ngModel]="tc"  style="width: 100%;" rows="10"></textarea>
+
+                            <!-- <ngx-editor-menu [editor]="termsConditionsEditor"> </ngx-editor-menu>
+                            <ngx-editor [editor]="termsConditionsEditor" formControlName="tc" [ngModel]="tc" [disabled]="false" [placeholder]="'Type here...'"></ngx-editor> -->
+                          </div>
+                          <div class="mt-2 mb-2 d-flex justify-content-end">
+                            <button class="btn-subm" type="submit" *ngIf="tc">Update</button>
+                            <button class="btn-subm" type="submit"  *ngIf="!tc">Add</button>
+                          </div>
+                          </form>
+                    </div>
+                    </div>
+                    <!-- Scheme Features -->
+                    <div class="col-md-12">
+                        <div class="card p-2">
+                            <div class="page-header">
+                  
+                                <div class="page-title">
+                                  <h4>Schemes Features</h4>
+                                  <h6>Manage your Schemes Features</h6>
+                                </div>
+                                <div class="page-btn">
+                                  <h6  class="btn btn-added" data-bs-toggle="modal" data-bs-target="#addfeature"
+                                    ><img src="assets/img/icons/plus.svg" class="me-2" alt="img" />Add
+                                    Feature</h6>
+                                </div>
+                              </div>
+                            <div class="table-responsive table-striped">
+                                <table   class="table datanew">
+                                    <thead>
+                                        <tr>
+                                            <th>Feature</th>
+                                            <th>Explanation</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr *ngFor="let table of features| paginate: { itemsPerPage: 10, currentPage: page, totalItems: features.total }">
+                                            <td>{{table.features}}</td>
+                                            <td>{{table.explanation}}</td>
+                                            <td>
+                                                <button type="button" class="btn-sm btn-edit mr-2" data-bs-toggle="modal" data-bs-target="#editfeature" (click)="singlefeature(table.id)">
+                                                    Edit
+                                                </button>
+                                                <button type="button" class="btn-sm btn-delete mr-2"(click)="deletefeature(table.id)">
+                                                    Delete
+                                                </button>
+                                                <!-- <mat-slide-toggle [(ngModel)]="table.status" (click)="updatecategorystatus(table)" ></mat-slide-toggle> -->
+                                            </td>
+                                        </tr>
+            
+                                        <tr *ngIf="features.length === 0">
+                                            <td colspan="12">
+                                                <h5 class="no-record">No  records found</h5>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+            
+                                <div class="mt-4 mb-4">
+                                    <pagination-controls *ngIf="(features).length!=0" (pageChange)="pageChanged($event)" (pageBoundsCorrection)="pageChanged($event)" [maxSize]="5"
+                                        [directionLinks]='true' [responsive]="true" previousLabel="Prev" nextLabel="Next"
+                                        screenReaderPaginationLabel="Pagination" screenReaderPageLabel="page" screenReaderCurrentLabel="You're on page">
+                                    </pagination-controls>  
+                                </div>
+            
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Scheme FAQ  -->
+                    <div class="col-md-12">
+                        <div class="card p-2">
+                            <div class="page-header">
+                  
+                                <div class="page-title">
+                                  <h4>Schemes FAQ's</h4>
+                                  <h6>Manage your Schemes FAQ's</h6>
+                                </div>
+                                <div class="page-btn">
+                                  <h6  class="btn btn-added" data-bs-toggle="modal" data-bs-target="#addfaq"
+                                    ><img src="assets/img/icons/plus.svg" class="me-2" alt="img" />Add
+                                    FAQ</h6>
+                                </div>
+                              </div>
+                            <div class="table-responsive table-striped">
+                                <table   class="table datanew">
+                                    <thead>
+                                        <tr>
+                                            <th>Question</th>
+                                            <th style="width: 50%;">Answer</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr *ngFor="let table of faqs| paginate: { itemsPerPage: 10, currentPage: page, totalItems: features.total }">
+                                            <td>{{table.questions}}</td>
+                                            <td>{{table.answers}}</td>
+                                            <td>
+                                                <button type="button" class="btn-sm btn-edit mr-2" data-bs-toggle="modal" data-bs-target="#editfaq" (click)="singlefaq(table.id)">
+                                                    Edit
+                                                </button>
+                                                <button type="button" class="btn-sm btn-delete mr-2"(click)="deletfaq(table.id)">
+                                                    Delete
+                                                </button>
+                                            </td>
+                                        </tr>
+            
+                                        <tr *ngIf="faqs.length === 0">
+                                            <td colspan="12">
+                                                <h5 class="no-record">No  records found</h5>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+            
+                                <div class="mt-4 mb-4">
+                                    <pagination-controls *ngIf="(features).length!=0" (pageChange)="pageChanged1($event)" (pageBoundsCorrection)="pageChanged1($event)" [maxSize]="5"
+                                        [directionLinks]='true' [responsive]="true" previousLabel="Prev" nextLabel="Next"
+                                        screenReaderPaginationLabel="Pagination" screenReaderPageLabel="page" screenReaderCurrentLabel="You're on page">
+                                    </pagination-controls>  
+                                </div>
+            
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                </div>
+            </div>
+        </div>
+    </div> 
+</div>
+</div>
+</section>
+    
+  <!-- add feature -->
+  <div class="modal fade" id="addfeature" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+      <form [formGroup]="postfeature"  class="p-4" (ngSubmit)="addfeature()">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="staticBackdropLabel">Add Feature</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">           
+            <div class="card-body">
+                <div class="row">
+                  <div class="col-md-12">
+                    <div class="form-group">
+                        <label>Feature</label>
+                        <input type="text" formControlName="features" placeholder="Enter Feature">
+                    </div>
+                  </div>
+                  <div class="col-md-12">
+                    <div class="form-group">
+                        <label>Feature Explanation</label>
+                        <input type="text" formControlName="explanation" placeholder="Enter Feature Explanation">
+                    </div>
+                  </div>
+   
+                </div>
+                <div class="mt-2 mb-2">
+                <button type="submit" ata-bs-dismiss="modal" [disabled]="this.postfeature.invalid"  class="btn btn-primary" data-bs-dismiss="modal" aria-label="Close">Add</button>
+                </div>
+            </div>
+        
+        </div>
+  
+      </div>
+    </form>
+    </div>
+  </div>
+  <!-- end  -->
+
+  <!-- edit feature -->
+  <div class="modal fade" id="editfeature" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+      <form [formGroup]="editfeature"  class="p-4" (ngSubmit)="editfeatures()">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="staticBackdropLabel">Edit Feature</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">           
+            <div class="card-body">
+                <div class="row">
+                  <div class="col-md-12">
+                    <div class="form-group">
+                        <label>Feature</label>
+                        <input type="text" formControlName="features" placeholder="Enter Feature">
+                    </div>
+                  </div>
+                  <div class="col-md-12">
+                    <div class="form-group">
+                        <label>Feature Explanation</label>
+                        <input type="text" formControlName="explanation" placeholder="Enter Feature Explanation">
+                    </div>
+                  </div>
+   
+                </div>
+                <div class="mt-2 mb-2">
+                <button type="submit" ata-bs-dismiss="modal" [disabled]="this.editfeature.invalid"  class="btn btn-primary" data-bs-dismiss="modal" aria-label="Close">Update</button>
+                </div>
+            </div>
+        
+        </div>
+  
+      </div>
+    </form>
+    </div>
+  </div>
+  <!-- end -->
+
+    <!-- add FAQ -->
+    <div class="modal fade" id="addfaq" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+          <form [formGroup]="postfaq"  class="p-4" (ngSubmit)="addfaq()">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h1 class="modal-title fs-5" id="staticBackdropLabel">Add FAQ</h1>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">           
+                <div class="card-body">
+                    <div class="row">
+                      <div class="col-md-12">
+                        <div class="form-group">
+                            <label>FAQ Question</label>
+                            <input type="text" formControlName="questions" placeholder="Enter FAQ Question">
+                        </div>
+                      </div>
+                      <div class="col-md-12">
+                        <div class="form-group">
+                            <label>FAQ Answer</label>
+                            <input type="text" formControlName="answers" placeholder="Enter FAQ Answer ">
+                        </div>
+                      </div>
+       
+                    </div>
+                    <div class="mt-2 mb-2">
+                    <button type="submit" ata-bs-dismiss="modal" [disabled]="this.postfaq.invalid"  class="btn btn-primary" data-bs-dismiss="modal" aria-label="Close">Add</button>
+                    </div>
+                </div>
+            
+            </div>
+      
+          </div>
+        </form>
+        </div>
+      </div>
+      <!-- end  -->
+    
+      <!-- edit FAQ -->
+      <div class="modal fade" id="editfaq" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+          <form [formGroup]="editfaqs"  class="p-4" (ngSubmit)="editfaq()">
+            <div class="modal-content">
+                <div class="modal-header">
+                  <h1 class="modal-title fs-5" id="staticBackdropLabel">Edit FAQ</h1>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" (click)="refresh()"></button>
+                </div>
+                <div class="modal-body">           
+                    <div class="card-body">
+                        <div class="row">
+                          <div class="col-md-12">
+                            <div class="form-group">
+                                <label>FAQ Question</label>
+                                <input type="text" formControlName="questions" placeholder="Enter FAQ Question">
+                            </div>
+                          </div>
+                          <div class="col-md-12">
+                            <div class="form-group">
+                                <label>FAQ Answer</label>
+                                <input type="text" formControlName="answers" placeholder="Enter FAQ Answer ">
+                            </div>
+                          </div>
+           
+                        </div>
+                        <div class="mt-2 mb-2">
+                        <button type="submit" ata-bs-dismiss="modal" [disabled]="this.editfaqs.invalid"  class="btn btn-primary" data-bs-dismiss="modal" aria-label="Close">Update</button>
+                        </div>
+                    </div>
+                
+                </div>
+          
+              </div>
+        </form>
+        </div>
+      </div>
+      <!-- end -->

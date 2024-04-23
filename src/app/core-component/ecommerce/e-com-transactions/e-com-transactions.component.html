@@ -1,0 +1,66 @@
+<section>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header">
+                    <div class="page-header">
+                        <div class="page-title">
+                            <h4>Ecommerce Transactions</h4>
+                            <h6>Manage User Transations</h6>
+                        </div>
+                        <div class="page-btn">
+                            <input [(ngModel)]="searchText" type="search" class="form-control my-input"
+                                placeholder="Search">
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive table-striped">
+                        <table class="table datanew">
+                            <thead>
+                                <tr>
+                                    <th>S.No</th>
+                                    <th>Name</th>
+                                    <th>Date</th>
+                                    <th>Transaction ID</th>
+                                    <th>Mobile</th>
+                                    <th>Price/Gram</th>
+                                    <th>Amount </th>
+                                    <th>Gst</th>
+                                    <th>Total Amount</th>
+                                    <th>Type</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr
+                                    *ngFor="let res of alltransactions|searchFilter:searchText| paginate: {itemsPerPage: 10, currentPage: page, totalItems: alltransactions.total };let i=index">
+                                    <td>{{i+1}}</td>
+                                    <td>{{res.username}}</td>
+                                    <td>{{res.created_at |date}}</td>
+                                    <td>{{res.id}}</td>
+                                    <td>{{res.mobile}}</td>
+                                    <td>{{res.liveprice |currency}}</td>
+                                    <td>{{res.amount|currency}}</td>
+                                    <td>{{res.gst |currency}}</td>
+                                    <td>{{res.totalprice |currency}}</td>
+                                    <!-- <td>{{res.total_amount|currency}}</td> -->
+                                    <td *ngIf="res.type==='EC'">Ecommerce</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <div class="mt-4 mb-4">
+                            <pagination-controls (pageChange)="pageChanged($event)"
+                                (pageBoundsCorrection)="pageChanged($event)" [maxSize]="5" [directionLinks]='true'
+                                [responsive]="true" previousLabel="Prev" nextLabel="Next"
+                                screenReaderPaginationLabel="Pagination" screenReaderPageLabel="page"
+                                screenReaderCurrentLabel="You're on page">
+                            </pagination-controls>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div>
+            </div>
+        </div>
+    </div>
+</section>

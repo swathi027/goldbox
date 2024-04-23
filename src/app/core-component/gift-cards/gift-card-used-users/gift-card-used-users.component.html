@@ -1,0 +1,84 @@
+<section>
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="card">
+                <div class="card-header">
+                  <div class="page-header">
+                    
+                    <div class="page-title">
+                      <h4>Gift card used users</h4>
+                      <h6>Manage your gift card used users</h6>  
+                    </div>
+                    <div class="search-set">
+                    
+                      <div class="search-input">
+                        <a class="btn btn-searchset"
+                          ><img src="assets/img/icons/search-white.svg" alt="img"
+                        /></a>
+                        <div class="dataTables_filter">
+                          <label>
+                            <input
+                              [(ngModel)]="searchText"
+                              
+                              type="search"
+                              class="form-control"
+                              placeholder="Search..."
+                            />
+                          </label>
+                        </div>
+                      </div>
+                    </div>
+
+                  </div>
+                  <div class="table-top">
+                   
+      
+                  </div>
+                
+                <div class="card-body">
+  
+                    <div class="table-responsive">
+                        <table  class="table datanew table-striped">
+                            <thead class="text-center">
+                                <tr>
+                                    <th>S.No</th>
+                                    <th>username</th>
+                                    <th>usermobile
+                                    </th>
+                                    <th>created_at</th>
+                                    <th>purchase_date</th>
+                                    <th>redeem_date</th>
+                                    <th>transaction_id</th>
+                                    <th>Gift Card Type</th>
+                                </tr>
+                            </thead>
+                            <tbody class="text-center">
+                              <tr *ngFor="let table of useduers.message|searchFilter:searchText| paginate: {itemsPerPage: 10, currentPage: page, totalItems: useduers.total };let i=index">
+                                <td>{{i+1}}</td>
+                                <td>{{table.username}}</td>
+                                <td>{{table.usermobile}}</td>
+                                <td>{{table.created_at | date : 'd/MM/yyyy'}}</td>
+                                <td>{{table.purchase_date | date : 'd/MM/yyyy'}}</td>
+                                <td>{{table.redeem_date | date : 'd/MM/yyyy'}}</td>
+                                <td>{{table.transaction_id}}</td>
+                                <td>
+                                  <p *ngIf="table.gift_card_type===1">Online</p>
+                                  <p *ngIf="table.gift_card_type===2">Offline</p>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                        <div class="mt-4 mb-4">
+                          <pagination-controls (pageChange)="pageChanged($event)" (pageBoundsCorrection)="pageChanged($event)" [maxSize]="5"
+                          [directionLinks]='true' [responsive]="true" previousLabel="Prev" nextLabel="Next"
+                          screenReaderPaginationLabel="Pagination" screenReaderPageLabel="page" screenReaderCurrentLabel="You're on page">
+                        </pagination-controls>  
+                      </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+</section>
+

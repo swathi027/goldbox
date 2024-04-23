@@ -1,0 +1,152 @@
+<section>
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="card">
+                <div class="card-header">
+                    <div class="page-header">
+                        <div class="page-title">
+                            <h4>Product Sizes</h4>
+                            <h6>Manage Your Product Sizes</h6>
+                        </div>
+                        <div class="page-btn">
+                            <button  class="btn btn-added" data-bs-toggle="modal" data-bs-target="#addproductsize">
+                                <img src="assets/img/icons/plus.svg" class="me-2" alt="img"/>Add Product Sizes</button>
+                        </div>
+                    </div>
+    
+                    <div class="table-top">
+                    <div class="search-set">
+                        <div class="search-input">
+                            <a class="btn btn-searchset"> <img src="assets/img/icons/search-white.svg" alt="img"/> </a>
+                        <div class="dataTables_filter">
+                            <label>
+                                <input [(ngModel)]="searchText" type="search" class="form-control" placeholder="Search..."/>
+                            </label>
+                        </div>
+                        </div>
+                    </div>
+                </div>
+    
+                <div class="card-body">
+                    <div class="table-responsive table-striped">
+                        <table (matSortChange)="sortData($event)" matSort matSortActive="Sno" matSortDirection="asc" matSortDisableClear class="table datanew">
+                            <thead>
+                                <tr>
+                                    <th>Product Name</th>
+                                    <th>Product Size</th>
+                                    <th>Product Weight</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let table of tableData|searchFilter:searchText| paginate: { itemsPerPage: 10, currentPage: page, totalItems: tableData.total }">
+                                    <td>{{table.productname}}</td>
+                                    <td>{{table.sizes}}</td>
+                                    <td>{{table.weight}}</td>
+                                    <td>
+                                        <button type="button" class="btn-sm btn-edit mr-2" data-bs-toggle="modal" data-bs-target="#editsize" (click)="singledata(table.id)">
+                                            Edit
+                                        </button>
+                                        <mat-slide-toggle [(ngModel)]="table.status" (click)="updatesizestatus(table)"></mat-slide-toggle>
+                                        &nbsp;<button type="button" class="btn-sm btn-edit bg-danger" (click)="delete(table.id)">
+                                            <i class="fas fa-trash-alt"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+    
+                                <!-- <tr *ngIf="tableData.length === 0">
+                                    <td colspan="12">
+                                        <h5 class="no-record">No matching records found</h5>
+                                    </td>
+                                </tr> -->
+                                <tr *ngIf="(tableData|searchFilter:searchText).length===0" class="text-center">
+                                    <td colspan="12">
+                                        <h5 class="no-record">No records found</h5>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+    
+                        <div class="mt-4 mb-4">
+                            <pagination-controls *ngIf="(tableData|searchFilter:searchText).length!=0" (pageChange)="pageChanged($event)" (pageBoundsCorrection)="pageChanged($event)" [maxSize]="5"
+                                [directionLinks]='true' [responsive]="true" previousLabel="Prev" nextLabel="Next"
+                                screenReaderPaginationLabel="Pagination" screenReaderPageLabel="page" screenReaderCurrentLabel="You're on page">
+                            </pagination-controls>  
+                        </div>
+    
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+</section>
+    
+    
+<!--Add Sizes-->
+<section class="modalbox-section1">
+    <div class="modal fade" id="addproductsize" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <form [formGroup]="postdata"  class="p-4" (ngSubmit)="onSubmit()">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="staticBackdropLabel">Add Product Size</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" (click)="refresh()"></button>
+                </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <!-- <div>
+                                <label class="enter-label">Product Name</label>
+                                <input class="enter-input"  type="text" formControlName="name" placeholder="Enter Product Name">
+                            </div> -->
+                            <div>
+                                <label class="enter-label">Product Size</label>
+                                <input class="enter-input"  type="number" formControlName="size" placeholder="Enter Product Size">
+                            </div>
+                            <div>
+                                <label class="upload-label">Product Weight</label>
+                                <input class="file-input" type="number" formControlName="weight"  placeholder=" Enter Product Weight">
+                            </div>
+                        </div>
+                    </div>
+                        <div class="modal-footer">
+                                <button type="submit" class="add-btn">Add</button>
+                        </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+    
+<!-- Edit sizes-->
+<section class="modalbox-section1">
+    <div class="modal fade"id="editsize" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog">
+        <form [formGroup]="editform"  class="p-4" (ngSubmit)="editSubmit()">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="staticBackdropLabel">Update Product Sizes</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <!-- <div>
+                        <label class="enter-label">Product Name</label>
+                        <input class="enter-input" type="text" formControlName="name" placeholder="Enter Product Name">
+                    </div> -->
+                    <div>
+                        <label class="enter-label">Product Size</label>
+                        <input class="enter-input" type="number" formControlName="size" placeholder="Enter Product Size">
+                    </div>
+                    <div>
+                        <label class="enter-label mt-4">Product Weight</label>
+                        <input class="enter-input" type="number" formControlName="weight" placeholder="Enter Product Weight">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Update</button>
+                </div>
+            </div>
+        </form>
+        </div>
+    </div>
+</section>

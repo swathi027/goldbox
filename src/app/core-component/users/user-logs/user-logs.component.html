@@ -1,0 +1,72 @@
+<section>
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="card">
+                <div class="card-header">
+                  <div class="page-header">
+                    
+                    <div class="page-title">
+                      <h4>User Logs</h4>
+
+                      <h6>Manage User Logs</h6>
+
+                    </div>
+                    <div class="page-btn">
+                      <button  class="btn btn-added" (click)="exportexcel1()">Export to Excel</button>
+                  </div>
+                  </div>
+
+  <div class="card-body p-0">
+    <div class="table-responsive">
+        <table  class="table datanew table-striped" id="datatableexamples">
+            <thead>
+                <tr>
+                    <th>S.No</th>
+                    <th>Name</th>
+                    <th>Mobile</th>
+                    <td>Login Date</td>
+                    <th>Address</th>
+                    <th>Device ID</th>
+                    <th>Device Ip</th>
+                    <th>Latitude</th>
+                    <th>Longitude</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let table of tableData|searchFilter:searchText| paginate: {itemsPerPage:tablesize, currentPage: page, totalItems: tableData.total };let i=index">
+                <td>{{i+1}}</td>
+                <td>{{table.username}}</td>
+                <td>{{table.mobilenumber}}</td>
+                <td>{{table.created_at|date}}</td>
+                <td>{{table.login_address}}</td>
+                <td>{{table.device_id}}</td>
+                <td>{{table.device_ip}}</td>
+                <td>{{table.latitude}}</td>
+                <td>{{table.longitude}}</td>
+               
+                <td></td>
+                </tr>
+              
+                <tr *ngIf="(tableData|searchFilter:searchText).length===0" class="text-center">
+                  <td colspan="12">
+                      <h5 class="no-record">No records found</h5>
+                  </td>
+              </tr>
+            </tbody>
+        </table>
+        <div class="mt-4 mb-4 d-md-flex justify-content-between" >
+          <pagination-controls  (pageChange)="pageChanged($event)" (pageBoundsCorrection)="pageChanged($event)" [maxSize]="5"
+            [directionLinks]='true' [responsive]="true" previousLabel="Prev" nextLabel="Next"
+            screenReaderPaginationLabel="Pagination" screenReaderPageLabel="page" screenReaderCurrentLabel="You're on page">
+          </pagination-controls> 
+          <form [formGroup]="form" >
+            <mat-checkbox  formControlName="pepperoni">Show All</mat-checkbox>
+          </form>
+      </div>
+    </div>
+</div> 
+</div>
+</div>
+</div>
+</div>
+</section>

@@ -1,0 +1,41 @@
+
+// pagenation styles
+:host ::ng-deep .ngx-pagination .current {
+    background-color: #630914;
+    color: white;
+    border-radius: 3px; 
+    border: none;
+  }
+  
+
+
+
+  
+  :host ::ng-deep .ngx-pagination a:hover {
+    background-color: #630914;
+    color: white;
+    border-radius: 3px; 
+    border: none;
+  
+  }
+  
+  
+// toggle colour
+::ng-deep .mat-mdc-slide-toggle.mat-accent {
+  --mdc-switch-selected-focus-state-layer-color: #096315;
+  --mdc-switch-selected-handle-color: #096315;
+  --mdc-switch-selected-hover-state-layer-color: #096315;
+  --mdc-switch-selected-pressed-state-layer-color: #096315;
+  --mdc-switch-selected-focus-handle-color:#096315;
+  --mdc-switch-selected-hover-handle-color: #096315;
+  --mdc-switch-selected-pressed-handle-color: #096315;
+  --mdc-switch-selected-focus-track-color: #096315;
+  --mdc-switch-selected-hover-track-color: #096315;
+  --mdc-switch-selected-pressed-track-color: #096315;
+  --mdc-switch-selected-track-color: #096315;
+}
+
+.table,th,tr,td{
+  text-align: center ;
+}
+

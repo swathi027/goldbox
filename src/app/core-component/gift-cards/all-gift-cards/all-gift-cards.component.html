@@ -1,0 +1,242 @@
+<section>
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="card">
+                <div class="card-header">
+                  <div class="page-header">
+                    
+                    <div class="page-title">
+                      <h4>All Gift Cards</h4>
+                      <h6>Manage your gift cards</h6>
+                    </div>
+                    <div class="search-set">
+                      <div class="search-input">
+                        <a class="btn btn-searchset"
+                          ><img src="assets/img/icons/search-white.svg" alt="img"
+                        /></a>
+                        <div class="dataTables_filter">
+                          <label>
+                            <input
+                              [(ngModel)]="searchText"
+                              
+                              type="search"
+                              class="form-control"
+                              placeholder="Search..."
+                            />
+                          </label>
+                        </div>
+                      </div>
+                    </div>
+
+                  </div>
+                  <div class="table-top justify-content-end">
+                   
+                    <div>
+                        <button class="add-festival-btnn" data-bs-toggle="modal" data-bs-target="#exampleModal">Add Gift Card</button>
+                    </div>
+                    
+                  </div>
+                
+                <div class="card-body">
+  
+                    <div class="table-responsive">
+                        <table  class="table datanew table-striped">
+                            <thead class="text-center">
+                                <tr>
+                                    <th>S.No</th>
+                                    <th>Merchant Name</th>
+                                    <th>created Date</th>
+                                    <th>Card_status</th>
+                                    <th>Expiry_Time</th>
+                                    <th>Gc_Number</th>
+                                    <th>Gift_card_type</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody class="text-center">
+                                <tr *ngFor="let table of alldata.message|searchFilter:searchText| paginate: {itemsPerPage: 10, currentPage: page, totalItems: alldata.total };let i=index">
+                                <td>{{i+1}}</td>
+                                <td>{{table.merchantname}}</td>
+                                <td>{{table.created | date :'dd/MM/yyyy'}}</td>
+                                <td>
+                                    <div>
+                                        <p *ngIf="table.card_status===1">Gift card created</p>
+                                        <p *ngIf="table.card_status===2">Gift card Purchased</p>
+                                        <p *ngIf="table.card_status===3">Gift card Applied</p>
+                                        <p *ngIf="table.card_status===4">Gift card Used</p>
+                                        <p *ngIf="table.card_status===5">Gift card Experied</p>
+                                    </div>
+                                <td>{{table.expiry_time}}Days</td>
+                                <td>{{table.gc_number}}</td>
+                                <td>
+                                  <p *ngIf="table.gift_card_type===1">Online</p>
+                                  <p *ngIf="table.gift_card_type===2">Offline</p>
+                                </td>
+                                <td>
+                                    <div>
+                                        <p *ngIf="table.status==='active'" class="gift-card-active">Gift card Active</p>
+                                        <p *ngIf="table.status==='inactive'" class="gift-card-inactive">Gift card Inactive</p>
+                                    </div>
+                                </td>
+                                <td>
+                                  <!-- <button class="buy-user" (click)="info(table.id)" data-bs-toggle="modal" data-bs-target="#exampleModall">Info</button> -->
+                                  <button class="buy-user"  routerLink="/giftcard/gift-card-buy-users/{{table.id}}">Buy Users</button><button class="buy-user" routerLink="/giftcard/gift-card-used-users/{{table.id}}">Gift Card Used Users</button></td>    
+                                </tr>
+                            </tbody>
+                        </table>
+                        <div class="mt-4 mb-4">
+                          <pagination-controls (pageChange)="pageChanged($event)" (pageBoundsCorrection)="pageChanged($event)" [maxSize]="5"
+                          [directionLinks]='true' [responsive]="true" previousLabel="Prev" nextLabel="Next"
+                          screenReaderPaginationLabel="Pagination" screenReaderPageLabel="page" screenReaderCurrentLabel="You're on page">
+                        </pagination-controls>  
+                      </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+</section>
+
+
+
+<!-- Button trigger modal -->
+
+  
+  <!-- Modal -->
+  <div class="modal fade" data-bs-backdrop="static" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="exampleModalLabel">Add Gift Card</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form [formGroup]="form">
+            <div class="mb-2">
+                <label>Merchant</label>
+                  <select class="form-select mt-2" formControlName="merchant_id">
+                    <option value="" selected>Select Merchant</option>
+                    <option value="{{data.id}}" *ngFor="let data of allmerchants">{{data.merchant_name}}</option>
+                  </select>
+                  <div *ngIf="submitted && f['merchant_id'].errors" class="invalid-feedback">
+                    <div *ngIf="f['merchant_id'].errors['required']">Merchant_id is required</div>
+                  </div>
+            </div>
+            <div class="mb-2">
+                <label>Amount</label>
+                <input type="number"   class="form-control" placeholder="Please enter amount" formControlName="amount" [ngClass]="{ 'is-invalid': submitted && f['amount'].errors }">
+                <div *ngIf="submitted && f['amount'].errors" class="invalid-feedback">
+                    <div *ngIf="f['amount'].errors['required']">Amount is required</div>
+                  </div>
+            </div>
+            <div class="mb-2">
+                <label>Secret Key</label>
+                <input type="text"   class="form-control" placeholder="Please enter secret key" formControlName="key" [ngClass]="{ 'is-invalid': submitted && f['key'].errors }">
+                <div *ngIf="submitted && f['key'].errors" class="invalid-feedback">
+                    <div *ngIf="f['key'].errors['required']">Key is required</div>
+                  </div>
+            </div>
+            <div class="mb-2">
+                <label>Quantity</label>
+                <input type="number"   class="form-control" placeholder="Please enter quantity" formControlName="quantity" [ngClass]="{ 'is-invalid': submitted && f['quantity'].errors }">
+                <div *ngIf="submitted && f['quantity'].errors" class="invalid-feedback">
+                    <div *ngIf="f['quantity'].errors['required']">Quantity is required</div>
+                  </div>
+            </div>
+            <div class="text-center">
+                <button class="add" (click)="onSubmit()">Add</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
+
+
+  <!-- Button trigger modal -->
+  <!-- Modal -->
+  <!-- <div class="modal fade" id="exampleModall" data-bs-backdrop="static" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="exampleModalLabel">Gift Card Details</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body" *ngIf="infodata">
+          <div class="row mb-2">
+            <div class="col-md-5">
+              <p>created_at
+              </p>
+            </div>
+            <div class="col-md-2">
+              <p>:</p>
+            </div>
+            <div class="col-md-5">
+              <p>{{infodata.message.created_at | date:'d/MM/yyyy'}}</p>
+            </div>
+          </div>
+          <div class="row mb-2">
+            <div class="col-md-5">
+              <p>expiry_time
+              </p>
+            </div>
+            <div class="col-md-2">
+              <p>:</p>
+            </div>
+            <div class="col-md-5">
+              <p>{{infodata.message.expiry_time}}Days</p>
+            </div>
+          </div>
+          <div class="row mb-2">
+            <div class="col-md-5">
+              <p>gift_card_type
+              </p>
+            </div>
+            <div class="col-md-2">
+              <p>:</p>
+            </div>
+            <div class="col-md-5">
+              <p *ngIf="infodata.message.gift_card_type===1">Online</p>
+              <p *ngIf="infodata.message.gift_card_type===2">Offline</p>
+            </div>
+          </div>
+          <div class="row mb-2">
+            <div class="col-md-5">
+              <p>Card_status
+              </p>
+            </div>
+            <div class="col-md-2">
+             <p>:</p>
+            </div>
+            <div class="col-md-5">
+              <div>
+                <p *ngIf="infodata.message.card_status===1">Gift card created</p>
+                <p *ngIf="infodata.message.card_status===2">Gift card Purchased</p>
+                <p *ngIf="infodata.message.card_status===3">Gift card Applied</p>
+                <p *ngIf="infodata.message.card_status===4">Gift card Used</p>
+                <p *ngIf="infodata.message.card_status===5">Gift card Experied</p>
+            </div>
+            </div>
+          </div>
+          <div class="row mb-2">
+            <div class="col-md-5">
+              <p>Status
+              </p>
+            </div>
+            <div class="col-md-2">
+              <p>:</p>
+            </div>
+            <div class="col-md-5">
+              <p *ngIf="infodata.message.status==='active'" class="gift-card-active">Active</p>
+              <p *ngIf="infodata.message.status==='inactive'" class="gift-card-inactive">Inactive</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div> -->

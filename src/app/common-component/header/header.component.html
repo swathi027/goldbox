@@ -1,0 +1,120 @@
+<!-- Header -->
+<div class="header" [ngClass]="{
+    'header-one': changeLayout === '2',
+    'header-three': changeLayout === '4'
+  }">
+  <div [ngClass]="{
+    'container': changeLayout === '3',
+    'sidebar-cls' : changeLayout !== '3'
+  }">
+    <div
+      [ngClass]="{
+      'd-flex justify-content-between align-items-center header-block': changeLayout === '3', 'sidebar-cls-two' : changeLayout !== '3'  }">
+      <!-- Logo -->
+      <div (mouseover)="miniSideBarMouseHover('over')" (mouseout)="miniSideBarMouseHover('out')" class="header-left"
+        [class.active]="miniSidebar === false" *ngIf="activePath !== 'pos'">
+        <a routerLink="/dashboard" class="logo">
+          <img [src]="logoPath" alt="" />
+        </a>
+        <a routerLink="/dashboard" class="logo-small">
+          <img src="assets/img/logo.png" alt="" />
+        </a>
+        <!-- <a
+      (click)="toggleSidebar()"
+      id="toggle_btn"
+      [class.active]="miniSidebar === false"
+      *ngIf="changeLayout === '1' || changeLayout === '3'"
+      href="javascript:void(0);"
+    >
+    </a> -->
+        <a (click)="toggleSidebar()" id="toggle_btn" href="javascript:void(0);"
+          *ngIf="changeLayout === '1' || changeLayout === '3'" [class.active]="miniSidebar === true">
+          <i data-feather="chevrons-left" class="feather-16"></i>
+        </a>
+      </div>
+      <div class="header-left active" *ngIf="activePath === 'pos'">
+        <a routerLink="/dashboard" class="logo logo-normal">
+          <img src="assets/img/logo.png" alt="" />
+        </a>
+      </div>
+      <!-- /Logo -->
+
+      <a id="mobile_btn" class="mobile_btn" (click)="togglesMobileSideBar()" *ngIf="activePath !== 'pos'">
+        <span class="bar-icon">
+          <span></span>
+          <span></span>
+          <span></span>
+        </span>
+      </a>
+      <a id="mobile_btn" class="mobile_btn" href="javascript:void(0)" *ngIf="activePath === 'pos'">
+        <span class="bar-icon">
+          <span></span>
+          <span></span>
+          <span></span>
+        </span>
+      </a>
+      <ul class="nav user-menu">
+        <li class="nav-item nav-searchinputs">
+        </li>
+        <li class="nav-item dropdown has-arrow flag-nav nav-item-box">
+        </li>
+        <li class="nav-item nav-item-box">
+        </li>
+        <li class="nav-item nav-item-box">
+        </li>
+        <li class="nav-item dropdown nav-item-box">
+        </li>
+        <li class="nav-item nav-item-box">
+        </li>
+        <li class="nav-item dropdown has-arrow main-drop">
+          <a href="javascript:void(0);" class="dropdown-toggle nav-link userset" data-bs-toggle="dropdown">
+            <span class="user-info">
+              <span class="user-letter">
+                <i class="fas fa-user"></i>
+              </span>
+              <span class="user-detail">
+                <span class="user-name">{{username}}</span>
+                <span class="user-role">{{userrole}}</span>
+              </span>
+            </span>
+          </a>
+          <div class="dropdown-menu menu-drop-user">
+            <div class="profilename">
+              <div class="profileset">
+                <span class="user-img"><img src="assets/img/profiles/avator1.jpg" alt="" />
+                  <span class="status online"></span></span>
+                <div class="profilesets">
+                  <h6>{{username}}</h6>
+                  <h5>{{userrole}}</h5>
+                </div>
+              </div>
+              <hr class="m-0" />
+              <!-- <a class="dropdown-item" routerLink="/dashboard">
+                <i class="me-2" data-feather="user"></i> My Profile</a>
+              <a class="dropdown-item" routerLink="/dashboard"><i class="me-2"
+                  data-feather="settings"></i>Settings</a> -->
+              <!-- <hr class="m-0" /> -->
+              <a class="dropdown-item logout pb-0" (click)="logout()">
+                <img src="assets/img/icons/log-out.svg"
+                  class="me-2" alt="img" />Logout
+                </a>
+            </div>
+          </div>
+        </li>
+      </ul>
+      <!-- /Header Menu -->
+      <!-- Mobile Menu -->
+      <div class="dropdown mobile-user-menu">
+        <a href="javascript:void(0);" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"
+          aria-expanded="false"><i class="fa fa-ellipsis-v"></i></a>
+        <div class="dropdown-menu dropdown-menu-right">
+          <!-- <a class="dropdown-item" routerLink="/dashboard">My Profile</a>
+          <a class="dropdown-item" routerLink="/dashboard">Settings</a> -->
+          <a class="dropdown-item"(click)="logout()">Logout</a>
+        </div>
+      </div>
+      <!-- /Mobile Menu -->
+    </div>
+  </div>
+</div>
+<!-- Header -->

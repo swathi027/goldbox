@@ -1,0 +1,133 @@
+<section>
+  
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="card">
+                <div class="card-header">
+                  <div class="page-header">
+                    
+                    <div class="page-title">
+                      <h4>Users KYC Request</h4>
+                      <h6>Manage your kyc request</h6>
+                    </div>
+                    <div class="search-set">
+                      <div class="search-input">
+                        <a class="btn btn-searchset"
+                          ><img src="assets/img/icons/search-white.svg" alt="img"
+                        /></a>
+                        <div class="dataTables_filter">
+                          <label>
+                            <input
+                              [(ngModel)]="searchText"
+                              
+                              type="search"
+                              class="form-control"
+                              placeholder="Search..."
+                            />
+                          </label>
+                        </div>
+                      </div>
+                    </div>
+                  
+                  </div>
+                  <div class="table-top">
+                  </div>
+                
+                <div class="card-body">
+  
+                    <div class="table-responsive">
+                        <table  class="table datanew table-striped">
+                            <thead>
+                                <tr>
+                                    <th>S.No</th>
+                                    <th>User Name</th>
+                                    <th>Mobile Number</th>
+                                    <th>Aadhar Card Number</th>
+                                    <th>Pan Card Number</th>
+                                    <th>Aadhar Image</th>
+                                    <th>Pan Image </th>
+                                    <th>Date</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let table of tableData.message|searchFilter:searchText| paginate: {itemsPerPage: 10, currentPage: page, totalItems: tableData.total };let i=index">
+                                  <td>{{i+1}}</td>
+                                  <td>{{table.username}}</td>
+                                  <td>{{table.usermobilenumber}}</td>
+                                    <td>{{table.aadhaar_card}}</td>
+                                    <td>{{table.pan_card}}</td>
+                                    <td>
+                                      <div>
+                                        <button class="view-button" (click)="singleimg(table)" data-bs-toggle="modal" data-bs-target="#exampleModal">View</button>
+                                      </div>
+                                    </td>
+                                    <td>
+                                      <div>
+                                        <button class="view-button" (click)="pansingleimg(table)" data-bs-toggle="modal" data-bs-target="#exampleModall">View</button>
+                                      </div>
+                                    </td>
+                                    <td>{{table.created_at|date}}</td>
+
+                                    <td>
+                                      <span *ngIf="table.isKycVerified=='active'">
+                                      <mat-slide-toggle ngModel="true" (click)="updatestatus(table)"></mat-slide-toggle>
+                                      </span>
+                                      <span *ngIf="table.isKycVerified =='inactive'">
+                                      <mat-slide-toggle  (click)="updatestatus(table)"></mat-slide-toggle>
+                                      </span>
+                                    </td>
+                                </tr>
+                                <tr *ngIf="tableData.length === 0">
+                                    <td colspan="12">
+                                      <h5 class="no-record">No matching records found</h5>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <div class="mt-4 mb-4">
+                          <pagination-controls (pageChange)="pageChanged($event)" (pageBoundsCorrection)="pageChanged($event)" [maxSize]="5"
+                          [directionLinks]='true' [responsive]="true" previousLabel="Prev" nextLabel="Next"
+                          screenReaderPaginationLabel="Pagination" screenReaderPageLabel="page" screenReaderCurrentLabel="You're on page">
+                        </pagination-controls>  
+                      </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+</section>
+
+
+<!-- Modal1 -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Aadhar Card</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <img src={{aadharimage}}>
+      </div>
+     
+    </div>
+  </div>
+</div>
+
+<!-- Modal2 -->
+<div class="modal fade" id="exampleModall" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Pan Card</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <img src={{panimage}}>
+      </div>
+     
+    </div>
+  </div>
+</div>

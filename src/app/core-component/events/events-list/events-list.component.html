@@ -1,0 +1,88 @@
+<section>
+  <div class="row">
+    <div class="col-sm-12">
+      <div class="card">
+        <div class="card-header">
+          <div class="page-header">
+            <div class="page-title">
+              <h4>Event Requests</h4>
+              <h6>Manage event requests</h6>
+            </div>
+            <div class="search-set">
+              <div class="search-input">
+                <a class="btn btn-searchset"><img src="assets/img/icons/search-white.svg" alt="img" /></a>
+                <div class="dataTables_filter">
+                  <label>
+                    <input [(ngModel)]="searchText" type="search" class="form-control" placeholder="Search..." />
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="card-body">
+            <div class="table-responsive">
+              <table class="table datanew table-striped">
+                <thead>
+                  <tr>
+                    <th>Event ID</th>
+                    <th>User Name</th>
+                    <th>Phone</th>
+                    <th>Event Type</th>
+                    <th>Event Name</th>
+                    <th>Event Date</th>
+                    <th>Event Status</th>
+                    <th>Created Date</th>
+                    <th>Action</th>
+                    <th>Status Update</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr
+                    *ngFor="let table of tableData|searchFilter:searchText| paginate: {itemsPerPage: 10, currentPage: page, totalItems: tableData.total };let i=index">
+                    <td>{{table.id}}</td>
+                    <td>{{table.username}}</td>
+                    <td>{{table.mobilenumber}}</td>
+                    <td>{{table.event_type}}</td>
+                    <td>{{ extractEventName(table.event_name) }}</td>
+                    <td>{{table.event_date}}</td>
+                    <td>
+                      <b *ngIf="table.status===0">Event Initiated</b>
+                      <b *ngIf="table.status===1">Event Approved </b>
+                      <b *ngIf="table.status===2">Event Not Approved</b>
+                      <b *ngIf="table.status===3">Event Cancelled </b>
+                      <b *ngIf="table.status===4">Event Completed </b>
+                      <b *ngIf="table.status===5">Event Deleted </b>
+                    </td>
+                    <td>{{table.created_at|date}}</td>
+                    <td>
+                      <button class="btn-sm btn-view" routerLink="/events/{{table.id}}">Info</button>
+                    </td>
+                    <td>
+                      <mat-select [(ngModel)]="table.status" name="txn_type" class="no-padding"
+                        (selectionChange)="onSelectionChange($event,table)">
+                        <mat-option *ngFor="let data of food" [value]="data.value">{{data.viewValue}}</mat-option>
+                      </mat-select>
+                    </td>
+                  </tr>
+                  <tr *ngIf="(tableData|searchFilter:searchText).length===0">
+                    <td colspan="12">
+                      <h5 class="no-record">No matching records found</h5>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+              <div class="mt-4 mb-4" *ngIf="(tableData|searchFilter:searchText).length!=0">
+                <pagination-controls (pageChange)="pageChanged($event)" (pageBoundsCorrection)="pageChanged($event)"
+                  [maxSize]="5" [directionLinks]='true' [responsive]="true" previousLabel="Prev" nextLabel="Next"
+                  screenReaderPaginationLabel="Pagination" screenReaderPageLabel="page"
+                  screenReaderCurrentLabel="You're on page">
+                </pagination-controls>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
